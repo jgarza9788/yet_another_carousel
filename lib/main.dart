@@ -1,4 +1,7 @@
+
 import 'package:flutter/material.dart';
+
+
 
 void main() => runApp(MyApp());
 
@@ -117,11 +120,15 @@ BoxDecoration BD({color}){
   return BoxDecoration(
     color: color,
     borderRadius: BorderRadius.circular(10.0),
+//    border: Border.all(
+//      color: Colors.grey[100],
+//      width: 5.0,
+//    ),
     boxShadow: [
       new BoxShadow(
-        color: Colors.black,
-        offset: new Offset(5.0, 5.0),
-        blurRadius: 10.0,
+        color: Colors.black.withOpacity(0.25),
+        offset: new Offset(2.5, 2.5),
+        blurRadius: 20.0,
       )
     ],
   );
@@ -143,8 +150,10 @@ class _CarouselState extends State<Carousel> {
   double shift = 0.0;
 //  double width = 0.0;
   Size size = Size(1.0, 1.0);
-  double itemOffset = 5.0;
+  double itemOffset = 4.0;
   GlobalKey _key = GlobalKey();
+
+
 
   List<Widget> rebuildWidgetList()
   {
@@ -175,21 +184,38 @@ class _CarouselState extends State<Carousel> {
 
 
       finalWidgetList.add(
-        Positioned(
-//          left: ratio * 250.0 + 50.0 ,
-//          left: (ratio * (0.5 - (ratio * 0.1))) * MediaQuery.of(context).size.width + 50.0,
-//        left:  p * (size.width + 50) + (100.0 * ratio) + 10.0,
-        left:  p * (size.width + 50 ) + (size.width * 0.10 - (0.50 * widget.widgetList.length)) + (size.width * 0.10 * (1/widget.widgetList.length) * ratio) ,
-          child: Container(
-            height: size.height * 0.80 * s ,
-            width: size.width * 0.80 * s ,
+          Transform(
+            transform: Matrix4.rotationY(1-s)..
+              translate(p * size.width, p * size.height * 0.25)
+              ..scale(s),
+            child: Container(
+              height: size.height * 0.80 * s ,
+              width: size.width * 0.90 * s ,
 //            child: FittedBox(
 //              fit: BoxFit.fitHeight,
-              child: widget.widgetList[i],
+                child: widget.widgetList[i],
 //            ),
+            ),
           ),
-        )
       );
+
+
+//      finalWidgetList.add(
+//        Positioned(
+////          left: ratio * 250.0 + 50.0 ,
+////          left: (ratio * (0.5 - (ratio * 0.1))) * MediaQuery.of(context).size.width + 50.0,
+////        left:  p * (size.width + 50) + (100.0 * ratio) + 10.0,
+//        left:  p * (size.width + 50 ) + (size.width * 0.10 - (0.50 * widget.widgetList.length)) + (size.width * 0.10 * (1/widget.widgetList.length) * ratio) ,
+//          child: Container(
+////            height: size.height * 0.80 * s ,
+////            width: size.width * 0.80 * s ,
+//////            child: FittedBox(
+//////              fit: BoxFit.fitHeight,
+////              child: widget.widgetList[i],
+//////            ),
+//          ),
+//        )
+//      );
     }
 
     return finalWidgetList;
@@ -209,6 +235,7 @@ class _CarouselState extends State<Carousel> {
     WidgetsBinding.instance.addPostFrameCallback(_afterLayout);
     super.initState();
 
+    shift = (itemOffset/theseIcons.length) * -2;
     rebuildWidgetList();
 
   }
@@ -226,7 +253,7 @@ class _CarouselState extends State<Carousel> {
         setState(() {
 
           shift += value.delta.dx/size.width;
-          shift = shift.clamp(-1.0 * itemOffset,1.0 * itemOffset);
+          shift = shift.clamp(-1.0 * itemOffset, 1.0);
 
           print(shift);
         });
@@ -238,7 +265,7 @@ class _CarouselState extends State<Carousel> {
         color: Colors.grey[900],
           child: Stack(
             overflow: Overflow.clip,
-            alignment: AlignmentDirectional.centerStart,
+            alignment: AlignmentDirectional.center,
             children: rebuildWidgetList(),
 //        children: theseIcons,
           ),
