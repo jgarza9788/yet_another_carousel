@@ -1,8 +1,10 @@
 
 import 'package:flutter/material.dart';
+import 'dart:async';
+import 'dart:math' as math;
 
 
-
+//void main() => runApp(SwipeDemoApp());
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -31,6 +33,16 @@ class MyApp extends StatelessWidget {
               child: Container(
                 color: Colors.red[900],
                 height: 100.0,
+//                child: SwipeButton(
+//                    thumb: Row(
+//                      mainAxisAlignment: MainAxisAlignment.center,
+//                      children: <Widget>[
+//                        Align(widthFactor: 0.33, child: Icon(Icons.chevron_right)),
+//                        Align(widthFactor: 0.33, child: Icon(Icons.chevron_right)),
+//                        Align(widthFactor: 0.33, child: Icon(Icons.chevron_right)),
+//                      ],
+//                    ),
+//                ),
               ),
             ),
           ],
@@ -145,14 +157,14 @@ class Carousel extends StatefulWidget {
   _CarouselState createState() => _CarouselState();
 }
 
-class _CarouselState extends State<Carousel> {
+class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin {
+
 
   double shift = 0.0;
 //  double width = 0.0;
   Size size = Size(1.0, 1.0);
   double itemOffset = 4.0;
   GlobalKey _key = GlobalKey();
-
 
 
   List<Widget> rebuildWidgetList()
@@ -186,11 +198,14 @@ class _CarouselState extends State<Carousel> {
       finalWidgetList.add(
           Transform(
             transform: Matrix4.rotationY(1-s)..
-              translate(p * size.width, p * size.height * 0.25)
+//              translate(p * size.width, p * size.height * 0.25)
+              translate(
+                  p * (size.width + 500) + (10.0 * ratio) - 500.0,
+                  p * size.height * 0.25)
               ..scale(s),
             child: Container(
-              height: size.height * 0.80 * s ,
-              width: size.width * 0.90 * s ,
+              height: size.height * 0.70 * s ,
+              width: size.width * 0.80 * s ,
 //            child: FittedBox(
 //              fit: BoxFit.fitHeight,
                 child: widget.widgetList[i],
@@ -229,6 +244,9 @@ class _CarouselState extends State<Carousel> {
 //    print(size);
   }
 
+  AnimationController _controller;
+  Animation<double> _contentAnimation;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -238,9 +256,47 @@ class _CarouselState extends State<Carousel> {
     shift = (itemOffset/theseIcons.length) * -2;
     rebuildWidgetList();
 
+    _controller = AnimationController(
+      duration: Duration(milliseconds: 500),
+      vsync: this,
+    );
+
+    _controller.addListener((){
+      setState(() {
+//        print(_controller.value);
+
+        print(Curves.easeInOut.transform(1- _controller.value));
+        prevDelta = prevDelta * Curves.ease.transform(1- _controller.value);
+        shift += prevDelta;
+        print('prevDelta $prevDelta');
+
+//        _onDragEnd();
+//        print(animation.value);
+      });
+    });
   }
   _afterLayout(_) {
     _getSize();
+  }
+
+//  double _velocity = 0.0;
+//  _onDragEnd(){
+//    setState(() {
+//      print(_velocity * 0.0005);
+//      shift += Curves.ease.flipped.transform(controller.value) * 0.25 * _velocity.sign ;
+//      shift = shift.clamp(-1.0 * itemOffset, 1.0);
+////      _velocity = _velocity * 0.90;
+//      rebuildWidgetList();
+//    });
+//  }
+
+  double prevDelta = 0.0;
+
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -252,11 +308,19 @@ class _CarouselState extends State<Carousel> {
       onHorizontalDragUpdate: (value){
         setState(() {
 
-          shift += value.delta.dx/size.width;
+          prevDelta = value.primaryDelta/size.width;
+          shift += prevDelta;
           shift = shift.clamp(-1.0 * itemOffset, 1.0);
 
           print(shift);
         });
+      },
+      onTap: (){prevDelta=0.0;},
+      onHorizontalDragStart: (value){prevDelta=0.0;},
+      onHorizontalDragEnd: (value){
+        print('prevDelta $prevDelta');
+        _controller.duration = Duration(milliseconds: (prevDelta*100000).abs().round());
+        _controller.forward(from: 0.0);
       },
       child: Container(
         key: _key,
@@ -272,5 +336,7 @@ class _CarouselState extends State<Carousel> {
       ),
     );
   }
+
+
 }
 
