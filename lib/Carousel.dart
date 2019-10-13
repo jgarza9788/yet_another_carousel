@@ -28,8 +28,8 @@ class _CarouselState extends State<Carousel> {
     double prevRawPos = 100.0;
 
 
-//    for (int i = 0; i < widget.widgetList.length ;i++)
-    for (int i = widget.widgetList.length - 1; i >= 0; i-- )
+    for (int i = 0; i < widget.widgetList.length ;i++)
+//    for (int i = widget.widgetList.length - 1; i >= 0; i-- )
     {
 
       double ratio = (i/widget.widgetList.length) ;
@@ -78,7 +78,7 @@ class _CarouselState extends State<Carousel> {
         }
 
       finalWidgetList.insert(
-        insertAt,
+        0,
         Transform.translate(
           offset: Offset(
               posX,
