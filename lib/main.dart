@@ -61,7 +61,7 @@ class MyApp extends StatelessWidget {
 
 
 
-
+double HaW = 150.0;
 
 List<Widget> theseIcons = [
 GestureDetector(
@@ -69,9 +69,10 @@ GestureDetector(
     print('Red');
   },
   child:   Container(
-    height: 100.0,
-    width: 100.0,
+    height: HaW,
+    width: HaW,
     decoration: BD(color:Colors.red),
+    alignment: Alignment.center,
     child: Text('Red0', style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.bold),),
   ),
 ),
@@ -80,9 +81,10 @@ GestureDetector(
       print('Orange');
     },
     child: Container(
-      height: 100.0,
-      width: 100.0,
+      height: HaW,
+      width: HaW,
       decoration: BD(color:Colors.orange),
+      alignment: Alignment.center,
       child: Text('Orange1', style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.bold),),
     ),
   ),
@@ -91,9 +93,10 @@ GestureDetector(
       print('Yellow');
     },
     child: Container(
-      height: 100.0,
-      width: 100.0,
+      height: HaW,
+      width: HaW,
       decoration: BD(color:Colors.yellow),
+      alignment: Alignment.center,
       child: Text('Yellow2', style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.bold),),
     ),
   ),
@@ -102,9 +105,10 @@ GestureDetector(
       print('lightGreen');
     },
     child: Container(
-      height: 100.0,
-      width: 100.0,
+      height: HaW,
+      width: HaW,
       decoration: BD(color:Colors.lightGreen),
+      alignment: Alignment.center,
       child: Text('LightGreen3', style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.bold),),
     ),
   ),
@@ -113,9 +117,10 @@ GestureDetector(
       print('Green');
     },
     child: Container(
-      height: 100.0,
-      width: 100.0,
+      height: HaW,
+      width: HaW,
       decoration: BD(color:Colors.green),
+      alignment: Alignment.center,
       child: Text('Green4', style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.bold),),
     ),
   ),
@@ -124,9 +129,10 @@ GestureDetector(
       print('Teal');
     },
     child: Container(
-      height: 100.0,
-      width: 100.0,
+      height: HaW,
+      width: HaW,
       decoration: BD(color:Colors.teal),
+      alignment: Alignment.center,
       child: Text('Teal5', style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.bold),),
     ),
   ),
@@ -135,10 +141,15 @@ GestureDetector(
       print('Blue');
     },
     child: Container(
-      height: 100.0,
-      width: 100.0,
+      height: HaW,
+      width: HaW,
       decoration: BD(color:Colors.blue),
-      child: Text('Blue6', style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.bold),),
+      alignment: Alignment.center,
+      child: Text(
+        'Blue6',
+        textAlign: TextAlign.center,
+        style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.bold),
+      ),
     ),
   ),
 //  Container(),
@@ -152,9 +163,9 @@ BoxDecoration BD({color}){
     borderRadius: BorderRadius.circular(10.0),
     boxShadow: [
       new BoxShadow(
-        color: Colors.black.withOpacity(0.25),
+        color: Colors.black.withOpacity(0.50),
         offset: new Offset(2.5, 2.5),
-        blurRadius: 20.0,
+        blurRadius: 25.0,
       )
     ],
   );

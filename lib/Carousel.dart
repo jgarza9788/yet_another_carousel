@@ -20,115 +20,200 @@ class _CarouselState extends State<Carousel> {
   double _prevDelta = 0.0;
 
 
+  List<Widget> wList = [];
+
   double lastWidgetPosition = 0.0;
   List<Widget> rebuildWidgetList()
   {
     List<Widget> finalWidgetList = [];
 
-    double prevRawPos = 100.0;
-
-
-    for (int i = 0; i < widget.widgetList.length ;i++)
-//    for (int i = widget.widgetList.length - 1; i >= 0; i-- )
+    if (_sizeWithExtra == Size.zero)
     {
-
-      double ratio = (i/widget.widgetList.length) ;
-      double negRatio = 1.0-ratio;
-      double xRatio = ratio -0.5;
-
-//      ratio -= 0.5;
-//      print('ratio $ratio');
-
-//      print('_size ${_sizeWithExtra.width}');
-
-//      double hwRatio = Curves.easeOutCirc.transform(negRatio);
-////      double hwRatio = sin((negRatio * (pi/2)) + (pi/4));
-//      hwRatio = pow(hwRatio, 10);
-//      hwRatio = hwRatio.clamp(0.0, double.infinity);
+      return finalWidgetList;
+    }
 
 
-      double ox = (xRatio * _sizeWithExtra.width + _shift )%_sizeWithExtra.width;
-      ox -= _sizeWithExtra.width/2.0;
 
-      double posX = 0.0;
-      double rawPos = ratio * _sizeWithExtra.width + _shift;
-      posX = rawPos%_sizeWithExtra.width;
-//      print(posX);
-//      print(_size.width);
-//      print(posX/_size.width);
-//      posX = posX%_sizeWithExtra.width;
-//      print(posX);
+    var params = [];
 
-//      print(
-//          'i $i\nratio $ratio\nnegRatio $negRatio\nxRatio $xRatio\nox $ox\n_shift $_shift\nposX $posX\n'
-//      );
+//    _shift += 50.0;
 
-      int insertAt = lastWidgetPosition > posX  ? finalWidgetList.length : 0 ;
+    for(int i = 0; i < widget.widgetList.length;i++)
+    {
+      double r = i/widget.widgetList.length ;
+//      double rawPos = ratio * _sizeWithExtra.width + _shift;
+      double ratio = (r + (_shift/_sizeWithExtra.width))%1.0;
+//      double pos = ratio * _sizeWithExtra.width;
 
-//      if (insertAt != 0)
-//        {
-          print(
-              'i $i\nratio $ratio\nnegRatio $negRatio\nxRatio $xRatio\nox $ox\n_shift $_shift\nposX $posX\n'
+      params.add(
+          {
+            "index":i,
+            "ratio":ratio,
+          }
           );
-//        }
+    }
 
-      if (i == widget.widgetList.length - 1)
-        {
-          lastWidgetPosition = posX;
-        }
+    params.sort( (a,b) =>  a["ratio"] < b["ratio"] ? 1:0  );
+//    print(params);
+    print('\n');
 
-      finalWidgetList.insert(
-        0,
-        Transform.translate(
-          offset: Offset(
-              posX,
-              0.0
+    for (int i = 0; i < params.length;i++)
+    {
+      print(params[i]);
+
+      Curve ThisCurve = Curves.ease;
+      double pos = ThisCurve.transform(params[i]["ratio"]);
+
+      ThisCurve = Curves.easeInOut;
+      double scale  = 1 - ThisCurve.transform(params[i]["ratio"]);
+
+      finalWidgetList.add(
+//        Transform.translate(
+//          offset: Offset(
+////              params[i]["ratio"] * _sizeWithExtra.width  ,
+//              pos * _sizeWithExtra.width,
+//              0.0
+//          ),
+        Align(
+          alignment: Alignment(
+            (pos * 5.0) - 2.5,
+            0.0,
           ),
-          child: FittedBox(
-            fit: BoxFit.fitWidth,
-            child:
-            Container(
-              child: Column(
-                children: <Widget>[
-                  Text('$i\n${(posX * 100).round()/100}',style: TextStyle(color: Colors.white),),
-                  widget.widgetList[i],
-                ],
+          child: Transform.scale(
+            scale: scale,
+            child: FittedBox(
+              fit: BoxFit.fitWidth,
+              alignment: Alignment.center,
+              child:
+              Container(
+                child: Column(
+//                mainAxisAlignment: MainAxisAlignment.start,
+//                crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    Text(
+                      '${params[i]["index"]}:::${params[i]["ratio"].toStringAsFixed(2)}',
+                      textAlign: TextAlign.left,
+                      style: TextStyle(color: Colors.white),),
+                    widget.widgetList[params[i]["index"]],
+                  ],
+                ),
               ),
             ),
           ),
         ),
+
       );
 
-//      finalWidgetList.add(
+    }
+
+
+
+    return finalWidgetList;
+
+//    double prevRawPos = 100.0;
+//
+//
+//    for (int i = 0; i < widget.widgetList.length ;i++)
+////    for (int i = widget.widgetList.length - 1; i >= 0; i-- )
+//    {
+//
+//      double ratio = (i/widget.widgetList.length) ;
+//      double negRatio = 1.0-ratio;
+//      double xRatio = ratio -0.5;
+//
+////      ratio -= 0.5;
+////      print('ratio $ratio');
+//
+////      print('_size ${_sizeWithExtra.width}');
+//
+////      double hwRatio = Curves.easeOutCirc.transform(negRatio);
+//////      double hwRatio = sin((negRatio * (pi/2)) + (pi/4));
+////      hwRatio = pow(hwRatio, 10);
+////      hwRatio = hwRatio.clamp(0.0, double.infinity);
+//
+//
+//      double ox = (xRatio * _sizeWithExtra.width + _shift )%_sizeWithExtra.width;
+//      ox -= _sizeWithExtra.width/2.0;
+//
+//      double posX = 0.0;
+//      double rawPos = ratio * _sizeWithExtra.width + _shift;
+//      posX = rawPos%_sizeWithExtra.width;
+////      print(posX);
+////      print(_size.width);
+////      print(posX/_size.width);
+////      posX = posX%_sizeWithExtra.width;
+////      print(posX);
+//
+////      print(
+////          'i $i\nratio $ratio\nnegRatio $negRatio\nxRatio $xRatio\nox $ox\n_shift $_shift\nposX $posX\n'
+////      );
+//
+//      int insertAt = lastWidgetPosition > posX  ? finalWidgetList.length : 0 ;
+//
+////      if (insertAt != 0)
+////        {
+//          print(
+//              'i $i\nratio $ratio\nnegRatio $negRatio\nxRatio $xRatio\nox $ox\n_shift $_shift\nposX $posX\n'
+//          );
+////        }
+//
+//      if (i == widget.widgetList.length - 1)
+//        {
+//          lastWidgetPosition = posX;
+//        }
+//
+//      finalWidgetList.insert(
+//        0,
 //        Transform.translate(
 //          offset: Offset(
-////              ox,
-////              ratio * _size.width + _shift,
-////              ratio * _size.width,
 //              posX,
 //              0.0
 //          ),
 //          child: FittedBox(
 //            fit: BoxFit.fitWidth,
-//            child: widget.widgetList[i],
+//            child:
+//            Container(
+//              child: Column(
+//                children: <Widget>[
+//                  Text('$i\n${(posX * 100).round()/100}',style: TextStyle(color: Colors.white),),
+//                  widget.widgetList[i],
+//                ],
+//              ),
+//            ),
 //          ),
-////          child: Container(
-//////            height: _size.width * 0.5 * ox.abs() ,
-//////            width: _size.width * 0.5 * ox.abs() ,
-//////            height: _size.width * negRatio  *  0.5,
-//////            width: _size.width * negRatio * 0.5,
-////            height: 100.0,
-////            width: 100.0,
-////            child: widget.widgetList[i],
-////          ),
 //        ),
 //      );
-
-
-    }
-
-//    print(finalWidgetList);
-    return finalWidgetList;
+//
+////      finalWidgetList.add(
+////        Transform.translate(
+////          offset: Offset(
+//////              ox,
+//////              ratio * _size.width + _shift,
+//////              ratio * _size.width,
+////              posX,
+////              0.0
+////          ),
+////          child: FittedBox(
+////            fit: BoxFit.fitWidth,
+////            child: widget.widgetList[i],
+////          ),
+//////          child: Container(
+////////            height: _size.width * 0.5 * ox.abs() ,
+////////            width: _size.width * 0.5 * ox.abs() ,
+////////            height: _size.width * negRatio  *  0.5,
+////////            width: _size.width * negRatio * 0.5,
+//////            height: 100.0,
+//////            width: 100.0,
+//////            child: widget.widgetList[i],
+//////          ),
+////        ),
+////      );
+//
+//
+//    }
+//
+////    print(finalWidgetList);
+//    return finalWidgetList;
   }
 
   Size _size = Size.zero;
@@ -141,12 +226,14 @@ class _CarouselState extends State<Carousel> {
 //    double w = _size.width * widget.widgetList.length * (( 0.0/2 ) + 0.5) ;
 //    double w = 100.0 * widget.widgetList.length + (0.5 * 100.0 * widget.widgetList.length);//* (( 0.0/2 ) + 0.75) ;
 
-    double unitSize = _size.width * 0.5;
-    double gap = 0.0;
+//    double unitSize = _size.width * 1.0;
+    double unitSize = 100.0;
+    double gap = 10.0;
 //    double w = _size.height * widget.widgetList.length + (0.5 * _size.height * widget.widgetList.length);//* (( 0.0/2 ) + 0.75) ;
     double w = unitSize * widget.widgetList.length + (gap * widget.widgetList.length);
 
     _sizeWithExtra = Size(w, _size.height);
+//    _sizeWithExtra = Size(_size.width * 1.5, _size.height);
     _sizeWithExtra = _size;
   }
 
@@ -181,7 +268,7 @@ class _CarouselState extends State<Carousel> {
   }
   _afterLayout(_) {
     _getSize();
-//    rebuildWidgetList();
+    rebuildWidgetList();
   }
 
 
@@ -189,6 +276,7 @@ class _CarouselState extends State<Carousel> {
   Widget build(BuildContext context) {
 
     rebuildWidgetList();
+//    wList = rebuildWidgetList();
 
     return GestureDetector(
       onHorizontalDragUpdate: (value){
