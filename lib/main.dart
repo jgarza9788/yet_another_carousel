@@ -10,50 +10,67 @@ void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
 
-  FrictionSimulation fs = FrictionSimulation(
-    0.1,
-    0.0,
-    0.5,
-  );
+//  FrictionSimulation fs = FrictionSimulation(
+//    0.1,
+//    0.0,
+//    0.5,
+//  );
 
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
 
-//    double t = 0.0;
-//    while(t < 1.0)
-//      {
-//        print(fs.x(t));
-//        t += 0.001;
-//      }
-
     return MaterialApp(
-      title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
+      title: '🎠 Yet_Another_Carousel',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-//      home: MyHomePage(title: 'Flutter Demo Home Page'),
       home: Scaffold(
-        body: Column(
+        appBar: AppBar(
+          title: Text('🎠 Yet_Another_Carousel'),
+          backgroundColor: Colors.blueGrey[900],
+        ),
+        body: ListView(
           children: <Widget>[
-            Expanded(
-              child: Container(
-                color: Colors.blueGrey,
-                height: 100.0,
-              ),
+            Carousel(
+              children: theseIcons,
+              positionCurve: Curves.easeOut,
+              scaleCurve: Curves.easeOut,
+              fadeOut: true,
             ),
             Carousel(
-              widgetList: theseIcons,
-            ),
-            Expanded(
-              child: Container(
-                color: Colors.red[900],
-                height: 100.0,
-              ),
+              children: theseIcons,
+              positionCurve: Curves.easeIn,
+              scaleCurve: Curves.easeIn,
+              outCurve: Curves.easeInExpo,
+              scaleOut: true,
+              fadeOut: true,
             ),
           ],
         ),
+        bottomNavigationBar: Container(
+          height: 50.0,
+          color: Colors.blueGrey,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+                RaisedButton(
+                  color: Colors.blue,
+                  child: Text('<<',style: TextStyle(fontSize: 24,color: Colors.white),),
+                  onPressed: (){},
+                ),
+                RaisedButton(
+                  color: Colors.blue,
+                  child: Text('>>',style: TextStyle(fontSize: 24,color: Colors.white),),
+                  onPressed: (){},
+                ),
+            ],
+          ),
+        ),
+
       ),
     );
   }
@@ -64,18 +81,18 @@ class MyApp extends StatelessWidget {
 double HaW = 150.0;
 
 List<Widget> theseIcons = [
-GestureDetector(
-  onTap: (){
-    print('Red');
-  },
-  child:   Container(
-    height: HaW,
-    width: HaW,
-    decoration: BD(color:Colors.red),
-    alignment: Alignment.center,
-    child: Text('Red0', style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.bold),),
+  GestureDetector(
+    onTap: (){
+      print('Red');
+    },
+    child:   Container(
+      height: HaW,
+      width: HaW,
+      decoration: BD(color:Colors.red),
+      alignment: Alignment.center,
+      child: Text('Red0', style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.normal),),
+    ),
   ),
-),
   GestureDetector(
     onTap: (){
       print('Orange');
@@ -85,7 +102,7 @@ GestureDetector(
       width: HaW,
       decoration: BD(color:Colors.orange),
       alignment: Alignment.center,
-      child: Text('Orange1', style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.bold),),
+      child: Text('Orange1', style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.normal),),
     ),
   ),
   GestureDetector(
@@ -97,7 +114,7 @@ GestureDetector(
       width: HaW,
       decoration: BD(color:Colors.yellow),
       alignment: Alignment.center,
-      child: Text('Yellow2', style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.bold),),
+      child: Text('Yellow2', style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.normal),),
     ),
   ),
   GestureDetector(
@@ -109,7 +126,7 @@ GestureDetector(
       width: HaW,
       decoration: BD(color:Colors.lightGreen),
       alignment: Alignment.center,
-      child: Text('LightGreen3', style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.bold),),
+      child: Text('LightGreen3', style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.normal),),
     ),
   ),
   GestureDetector(
@@ -121,7 +138,7 @@ GestureDetector(
       width: HaW,
       decoration: BD(color:Colors.green),
       alignment: Alignment.center,
-      child: Text('Green4', style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.bold),),
+      child: Text('Green4', style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.normal),),
     ),
   ),
   GestureDetector(
@@ -133,7 +150,7 @@ GestureDetector(
       width: HaW,
       decoration: BD(color:Colors.teal),
       alignment: Alignment.center,
-      child: Text('Teal5', style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.bold),),
+      child: Text('Teal5', style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.normal),),
     ),
   ),
   GestureDetector(
@@ -148,24 +165,86 @@ GestureDetector(
       child: Text(
         'Blue6',
         textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.bold),
+        style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.normal),
       ),
     ),
   ),
-//  Container(),
-//  Container(height: 50.0,width: 50.0,),
+  GestureDetector(
+    onTap: (){
+      print('Indigo');
+    },
+    child: Container(
+      height: HaW,
+      width: HaW,
+      decoration: BD(color:Colors.indigo),
+      alignment: Alignment.center,
+      child: Text(
+        'Indigo7',
+        textAlign: TextAlign.center,
+        style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.normal),
+      ),
+    ),
+  ),
+  GestureDetector(
+    onTap: (){
+      print('Purple');
+    },
+    child: Container(
+      height: HaW,
+      width: HaW,
+      decoration: BD(color:Colors.purple),
+      alignment: Alignment.center,
+      child: Text(
+        'Purple8',
+        textAlign: TextAlign.center,
+        style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.normal),
+      ),
+    ),
+  ),
+  GestureDetector(
+    onTap: (){
+      print('White');
+    },
+    child: Container(
+      height: HaW,
+      width: HaW,
+      decoration: BD(color:Colors.white),
+      alignment: Alignment.center,
+      child: Text(
+        'White9',
+        textAlign: TextAlign.center,
+        style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.normal),
+      ),
+    ),
+  ),
+  GestureDetector(
+    onTap: (){
+      print('Black');
+    },
+    child: Container(
+      height: HaW,
+      width: HaW,
+      decoration: BD(color:Colors.black),
+      alignment: Alignment.center,
+      child: Text(
+        'Black10',
+        textAlign: TextAlign.center,
+        style: TextStyle(fontSize: 24.0,color: Colors.white,fontWeight: FontWeight.normal),
+      ),
+    ),
+  ),
 ];
 
 
 BoxDecoration BD({color}){
   return BoxDecoration(
     color: color,
-    borderRadius: BorderRadius.circular(10.0),
+    borderRadius: BorderRadius.circular(5.0),
     boxShadow: [
       new BoxShadow(
         color: Colors.black.withOpacity(0.50),
         offset: new Offset(2.5, 2.5),
-        blurRadius: 25.0,
+        blurRadius: 10.0,
       )
     ],
   );

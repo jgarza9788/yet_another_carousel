@@ -1,48 +1,59 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-
+import 'package:yet_another_carousel/main.dart';
+import 'friction_simulation.dart';
 
 class Carousel extends StatefulWidget {
-  Carousel({this.widgetList});
+  Carousel({
+    @required this.children,
+    this.positionCurve = Curves.linear,
+    this.scaleCurve = Curves.linear,
+    this.outCurve = Curves.linear,
+    this.fadeOut = false,
+    this.scaleOut = false,
+  });
 
-  List<Widget> widgetList;
+  List<Widget> children;
+  Curve positionCurve;
+  Curve scaleCurve;
+  Curve outCurve;
+  bool fadeOut;
+  bool scaleOut;
 
   @override
   _CarouselState createState() => _CarouselState();
 }
 
-class _CarouselState extends State<Carousel> {
+class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin{
 
   GlobalKey _key = GlobalKey();
 
   double _shift = 0.0;
-  double _prevDelta = 0.0;
+  double _velocity = 0.0;
+  int _dragEndTime = 0;
 
+  AnimationController _controller;
 
   List<Widget> wList = [];
 
   double lastWidgetPosition = 0.0;
-  List<Widget> rebuildWidgetList()
+  List<Widget> refresh()
   {
     List<Widget> finalWidgetList = [];
 
-    if (_sizeWithExtra == Size.zero)
+    if (_size == Size.zero)
     {
       return finalWidgetList;
     }
 
-
-
     var params = [];
 
-//    _shift += 50.0;
-
-    for(int i = 0; i < widget.widgetList.length;i++)
+    for(int i = 0; i < widget.children.length;i++)
     {
-      double r = i/widget.widgetList.length ;
+      double r = i/widget.children.length ;
 //      double rawPos = ratio * _sizeWithExtra.width + _shift;
-      double ratio = (r + (_shift/_sizeWithExtra.width))%1.0;
+      double ratio = (r + _shift)%1.0;
 //      double pos = ratio * _sizeWithExtra.width;
 
       params.add(
@@ -55,186 +66,66 @@ class _CarouselState extends State<Carousel> {
 
     params.sort( (a,b) =>  a["ratio"] < b["ratio"] ? 1:0  );
 //    print(params);
-    print('\n');
+//    print('\n');
 
     for (int i = 0; i < params.length;i++)
     {
-      print(params[i]);
+//      print(params[i]);
 
-      Curve ThisCurve = Curves.ease;
-      double pos = ThisCurve.transform(params[i]["ratio"]);
+      double lastAnim = widget.outCurve.transform(params[i]["ratio"]) * 25.0;
+      lastAnim = lastAnim.clamp(0.0, 1.0);
 
-      ThisCurve = Curves.easeInOut;
-      double scale  = 1 - ThisCurve.transform(params[i]["ratio"]);
+      double pos = widget.positionCurve.transform(params[i]["ratio"]);
+      pos = ((pos * 1.0) - 0.0) - (1-lastAnim);
+
+      double scale  = 1 - widget.scaleCurve.transform(params[i]["ratio"]);
+      scale = 1 - params[i]["ratio"];
+      scale = widget.scaleOut ? scale * lastAnim : scale;
+
+      double posY = 2.0 - (scale * 2.0);
+      double opacity = widget.fadeOut ? lastAnim: 1.0;
 
       finalWidgetList.add(
-//        Transform.translate(
-//          offset: Offset(
-////              params[i]["ratio"] * _sizeWithExtra.width  ,
-//              pos * _sizeWithExtra.width,
-//              0.0
-//          ),
         Align(
           alignment: Alignment(
-            (pos * 5.0) - 2.5,
-            0.0,
+            pos,
+            0.0
           ),
           child: Transform.scale(
             scale: scale,
-            child: FittedBox(
-              fit: BoxFit.fitWidth,
-              alignment: Alignment.center,
-              child:
-              Container(
-                child: Column(
-//                mainAxisAlignment: MainAxisAlignment.start,
-//                crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    Text(
-                      '${params[i]["index"]}:::${params[i]["ratio"].toStringAsFixed(2)}',
-                      textAlign: TextAlign.left,
-                      style: TextStyle(color: Colors.white),),
-                    widget.widgetList[params[i]["index"]],
-                  ],
-                ),
+            child: Opacity(
+              opacity: opacity,
+              child: FittedBox(
+                fit: BoxFit.fitWidth,
+                alignment: Alignment.center,
+                child: widget.children[params[i]["index"]],
+//                Container(
+//                  child: Column(
+//                    children: <Widget>[
+//                      Text(
+//                        '${params[i]["index"]}:::${params[i]["ratio"].toStringAsFixed(2)}',
+//                        textAlign: TextAlign.left,
+//                        style: TextStyle(color: Colors.white),),
+//                      widget.children[params[i]["index"]],
+//                    ],
+//                  ),
+//                ),
               ),
             ),
           ),
         ),
-
       );
 
     }
 
-
-
     return finalWidgetList;
-
-//    double prevRawPos = 100.0;
-//
-//
-//    for (int i = 0; i < widget.widgetList.length ;i++)
-////    for (int i = widget.widgetList.length - 1; i >= 0; i-- )
-//    {
-//
-//      double ratio = (i/widget.widgetList.length) ;
-//      double negRatio = 1.0-ratio;
-//      double xRatio = ratio -0.5;
-//
-////      ratio -= 0.5;
-////      print('ratio $ratio');
-//
-////      print('_size ${_sizeWithExtra.width}');
-//
-////      double hwRatio = Curves.easeOutCirc.transform(negRatio);
-//////      double hwRatio = sin((negRatio * (pi/2)) + (pi/4));
-////      hwRatio = pow(hwRatio, 10);
-////      hwRatio = hwRatio.clamp(0.0, double.infinity);
-//
-//
-//      double ox = (xRatio * _sizeWithExtra.width + _shift )%_sizeWithExtra.width;
-//      ox -= _sizeWithExtra.width/2.0;
-//
-//      double posX = 0.0;
-//      double rawPos = ratio * _sizeWithExtra.width + _shift;
-//      posX = rawPos%_sizeWithExtra.width;
-////      print(posX);
-////      print(_size.width);
-////      print(posX/_size.width);
-////      posX = posX%_sizeWithExtra.width;
-////      print(posX);
-//
-////      print(
-////          'i $i\nratio $ratio\nnegRatio $negRatio\nxRatio $xRatio\nox $ox\n_shift $_shift\nposX $posX\n'
-////      );
-//
-//      int insertAt = lastWidgetPosition > posX  ? finalWidgetList.length : 0 ;
-//
-////      if (insertAt != 0)
-////        {
-//          print(
-//              'i $i\nratio $ratio\nnegRatio $negRatio\nxRatio $xRatio\nox $ox\n_shift $_shift\nposX $posX\n'
-//          );
-////        }
-//
-//      if (i == widget.widgetList.length - 1)
-//        {
-//          lastWidgetPosition = posX;
-//        }
-//
-//      finalWidgetList.insert(
-//        0,
-//        Transform.translate(
-//          offset: Offset(
-//              posX,
-//              0.0
-//          ),
-//          child: FittedBox(
-//            fit: BoxFit.fitWidth,
-//            child:
-//            Container(
-//              child: Column(
-//                children: <Widget>[
-//                  Text('$i\n${(posX * 100).round()/100}',style: TextStyle(color: Colors.white),),
-//                  widget.widgetList[i],
-//                ],
-//              ),
-//            ),
-//          ),
-//        ),
-//      );
-//
-////      finalWidgetList.add(
-////        Transform.translate(
-////          offset: Offset(
-//////              ox,
-//////              ratio * _size.width + _shift,
-//////              ratio * _size.width,
-////              posX,
-////              0.0
-////          ),
-////          child: FittedBox(
-////            fit: BoxFit.fitWidth,
-////            child: widget.widgetList[i],
-////          ),
-//////          child: Container(
-////////            height: _size.width * 0.5 * ox.abs() ,
-////////            width: _size.width * 0.5 * ox.abs() ,
-////////            height: _size.width * negRatio  *  0.5,
-////////            width: _size.width * negRatio * 0.5,
-//////            height: 100.0,
-//////            width: 100.0,
-//////            child: widget.widgetList[i],
-//////          ),
-////        ),
-////      );
-//
-//
-//    }
-//
-////    print(finalWidgetList);
-//    return finalWidgetList;
   }
 
   Size _size = Size.zero;
-  Size _sizeWithExtra = Size.zero;
   _getSize(){
     RenderBox RB = _key.currentContext.findRenderObject();
     _size = RB.size;
 
-//    double w = _size.width * widget.widgetList.length * 0.5 * (( ( 0.5/2 ) + 0.5) * 2);
-//    double w = _size.width * widget.widgetList.length * (( 0.0/2 ) + 0.5) ;
-//    double w = 100.0 * widget.widgetList.length + (0.5 * 100.0 * widget.widgetList.length);//* (( 0.0/2 ) + 0.75) ;
-
-//    double unitSize = _size.width * 1.0;
-    double unitSize = 100.0;
-    double gap = 10.0;
-//    double w = _size.height * widget.widgetList.length + (0.5 * _size.height * widget.widgetList.length);//* (( 0.0/2 ) + 0.75) ;
-    double w = unitSize * widget.widgetList.length + (gap * widget.widgetList.length);
-
-    _sizeWithExtra = Size(w, _size.height);
-//    _sizeWithExtra = Size(_size.width * 1.5, _size.height);
-    _sizeWithExtra = _size;
   }
 
 
@@ -244,58 +135,77 @@ class _CarouselState extends State<Carousel> {
     WidgetsBinding.instance.addPostFrameCallback(_afterLayout);
     super.initState();
 
+
+    _shift = (5/-theseIcons.length) + 0.025;
 //    shift = (itemOffset/theseIcons.length) * -2;
-    rebuildWidgetList();
+    refresh();
 
-//    _controller = AnimationController(
-//      duration: Duration(milliseconds: 500),
-//      vsync: this,
-//    );
+    _controller = AnimationController(
+      duration: Duration(milliseconds: 5000),
+      vsync: this,
+    );
 
-//    _controller.addListener((){
-//      setState(() {
-////        print(_controller.value);
-//
-//        print(Curves.easeInOut.transform(1- _controller.value));
-//        prevDelta = prevDelta * Curves.ease.transform(1- _controller.value);
-//        shift += prevDelta;
-//        print('prevDelta $prevDelta');
-//
-////        _onDragEnd();
-////        print(animation.value);
-//      });
-//    });
+
+//    int lastTime = 0;
+
+    _controller.addListener((){
+      setState(() {
+
+//        print('last update time == ${DateTime.now().millisecond - lastTime}');
+//        lastTime = DateTime.now().millisecond;
+
+        print(_controller.value);
+////        print(Curves.easeIn.transform(1- _controller.value));
+
+//        double d = Curves.decelerate.flipped.transform(1-  _controller.value);
+//        d = pow(d,4);
+//        print(d);
+//        _shift += _velocity * d ;
+
+          int t = DateTime.now().millisecondsSinceEpoch - _dragEndTime;
+          _shift += _velocity * pow(0.99,t);
+
+
+      });
+    });
   }
   _afterLayout(_) {
     _getSize();
-    rebuildWidgetList();
+    refresh();
   }
 
 
   @override
   Widget build(BuildContext context) {
 
-    rebuildWidgetList();
+    refresh();
 //    wList = rebuildWidgetList();
 
     return GestureDetector(
       onHorizontalDragUpdate: (value){
         setState(() {
 
-          _prevDelta = value.primaryDelta;
-          _shift += _prevDelta;
+//          _prevDelta = value.primaryDelta/_size.width;
+          _shift += value.primaryDelta/_size.width;
+//          _shift = _shift.clamp(-1.0, 1.0);
 //          _shift = _shift.clamp(-1.0, 1.0);
 
-          print(_shift);
+//          print(_shift);
         });
       },
 //      onTap: (){prevDelta=0.0;},
 //      onHorizontalDragStart: (value){prevDelta=0.0;},
-//      onHorizontalDragEnd: (value){
-//        print('prevDelta $prevDelta');
-//        _controller.duration = Duration(milliseconds: (prevDelta*100000).abs().round());
-//        _controller.forward(from: 0.0);
-//      },
+      onHorizontalDragEnd: (value){
+
+        _dragEndTime = DateTime.now().millisecondsSinceEpoch;
+        _velocity = value.primaryVelocity/1000;
+        print('_velocity ${_velocity}');
+
+        _controller.duration = Duration(milliseconds: (value.primaryVelocity).abs().round());
+        _controller.forward(from: 0.0);
+
+
+      },
       child: Container(
         key: _key,
         height: 250.0,
@@ -304,7 +214,7 @@ class _CarouselState extends State<Carousel> {
           child: Stack(
             overflow: Overflow.clip,
             alignment: AlignmentDirectional.centerStart,
-            children: rebuildWidgetList(),
+            children: refresh(),
 //        children: theseIcons,
           ),
       ),
