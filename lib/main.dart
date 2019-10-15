@@ -2,20 +2,23 @@
 import 'package:flutter/material.dart';
 import 'Carousel.dart';
 
-import 'friction_simulation.dart';
+
 
 
 //void main() => runApp(SwipeDemoApp());
 void main() => runApp(MyApp());
 
-class MyApp extends StatelessWidget {
 
-//  FrictionSimulation fs = FrictionSimulation(
-//    0.1,
-//    0.0,
-//    0.5,
-//  );
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
 
+class _MyAppState extends State<MyApp> {
+
+
+  int wIndex = 0;
+  bool autoScroll = false;
 
   // This widget is the root of your application.
   @override
@@ -32,23 +35,96 @@ class MyApp extends StatelessWidget {
           title: Text('🎠 Yet_Another_Carousel'),
           backgroundColor: Colors.blueGrey[900],
         ),
-        body: ListView(
-          children: <Widget>[
-            Carousel(
-              children: theseIcons,
-              positionCurve: Curves.easeOut,
-              scaleCurve: Curves.easeOut,
-              fadeOut: true,
-            ),
-            Carousel(
-              children: theseIcons,
-              positionCurve: Curves.easeIn,
-              scaleCurve: Curves.easeIn,
-              outCurve: Curves.easeInExpo,
-              scaleOut: true,
-              fadeOut: true,
-            ),
-          ],
+        body: Material(
+          color: Colors.blueGrey,
+          child: ListView(
+            children: <Widget>[
+              Carousel(
+                children: theseIcons,
+                backgroundColor: Colors.grey[850],
+                positionCurve: Curves.easeOut,
+                scaleCurve: Curves.easeOut,
+                fadeOut: true,
+                scrollTo: wIndex,
+              ),
+              Divider(height: 2.5,),
+              Carousel(
+                children: theseIcons,
+                backgroundColor: Colors.grey[850],
+                positionCurve: Curves.easeIn,
+                scaleCurve: Curves.easeIn,
+                scaleOut: true,
+              ),
+              Divider(height: 2.5,),
+              Carousel(
+                children: theseIcons,
+                backgroundColor: Colors.grey[850],
+                positionCurve: Curves.easeOut,
+                scaleCurve: Curves.easeOut,
+                fadeOut: true,
+                widthFactor: 2.0,
+              ),
+              Divider(height: 2.5,),
+              Carousel(
+                children: theseIcons,
+                backgroundColor: Colors.grey[850],
+                positionCurve: Curves.easeIn,
+                scaleCurve: Curves.easeIn,
+                fadeOut: true,
+                widthFactor: 2.0,
+                widgetHeight: 100,
+                widgetWidth: 100,
+              ),
+              Divider(height: 2.5,),
+              Carousel(
+                children: theseIcons,
+                backgroundColor: Colors.grey[850],
+                positionCurve: Curves.easeIn,
+                scaleCurve: Curves.easeIn,
+                fadeOut: true,
+                widthFactor: 2.0,
+              ),
+              Divider(height: 2.5,),
+              Carousel(
+                children: theseIcons,
+                backgroundColor: Colors.grey[850],
+                positionCurve: Curves.easeOut,
+                scaleCurve: Curves.easeIn,
+                tailPositionY: -1.50,
+                tailPositionX: 0.5,
+                fadeOut: true,
+                widgetWidth: 150,
+                widgetHeight: 100,
+              ),
+              Divider(height: 2.5,),
+              Carousel(
+                children: theseIcons,
+                backgroundColor: Colors.grey[850],
+                positionCurve: Curves.easeOut,
+                scaleCurve: Curves.easeIn,
+                tailPositionY: 1.50,
+                tailPositionX: 0.5,
+                fadeOut: true,
+                widgetWidth: 150,
+                widgetHeight: 100,
+              ),
+              Divider(height: 2.5,),
+              Carousel(
+                children: theseIcons,
+                height: 50.0,
+                backgroundColor: Colors.grey[850],
+                positionCurve: Curves.easeOut,
+                scaleCurve: Curves.easeIn,
+                tailPositionY: 0.0,
+                tailPositionX: 1.0,
+                widthFactor: 2.0,
+                xPosition: 1.0,
+                fadeOut: true,
+                widgetWidth: 0.5,
+                widgetHeight: 0.75,
+              ),
+            ],
+          ),
         ),
         bottomNavigationBar: Container(
           height: 50.0,
@@ -60,12 +136,26 @@ class MyApp extends StatelessWidget {
                 RaisedButton(
                   color: Colors.blue,
                   child: Text('<<',style: TextStyle(fontSize: 24,color: Colors.white),),
-                  onPressed: (){},
+                  onPressed: (){
+                    setState(() {
+                      wIndex -= 1;
+                      wIndex = wIndex % theseIcons.length;
+                      autoScroll = true;
+                    });
+                    print(wIndex);
+                  },
                 ),
                 RaisedButton(
                   color: Colors.blue,
                   child: Text('>>',style: TextStyle(fontSize: 24,color: Colors.white),),
-                  onPressed: (){},
+                  onPressed: (){
+                    setState(() {
+                      wIndex += 1;
+                      wIndex = wIndex % theseIcons.length;
+                      autoScroll = true;
+                    });
+                    print(wIndex);
+                  },
                 ),
             ],
           ),
@@ -233,6 +323,159 @@ List<Widget> theseIcons = [
       ),
     ),
   ),
+  //
+//  GestureDetector(
+//    onTap: (){
+//      print('Red');
+//    },
+//    child:   Container(
+//      height: HaW,
+//      width: HaW,
+//      decoration: BD(color:Colors.red),
+//      alignment: Alignment.center,
+//      child: Text('Red0', style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.normal),),
+//    ),
+//  ),
+//  GestureDetector(
+//    onTap: (){
+//      print('Orange');
+//    },
+//    child: Container(
+//      height: HaW,
+//      width: HaW,
+//      decoration: BD(color:Colors.orange),
+//      alignment: Alignment.center,
+//      child: Text('Orange1', style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.normal),),
+//    ),
+//  ),
+//  GestureDetector(
+//    onTap: (){
+//      print('Yellow');
+//    },
+//    child: Container(
+//      height: HaW,
+//      width: HaW,
+//      decoration: BD(color:Colors.yellow),
+//      alignment: Alignment.center,
+//      child: Text('Yellow2', style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.normal),),
+//    ),
+//  ),
+//  GestureDetector(
+//    onTap: (){
+//      print('lightGreen');
+//    },
+//    child: Container(
+//      height: HaW,
+//      width: HaW,
+//      decoration: BD(color:Colors.lightGreen),
+//      alignment: Alignment.center,
+//      child: Text('LightGreen3', style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.normal),),
+//    ),
+//  ),
+//  GestureDetector(
+//    onTap: (){
+//      print('Green');
+//    },
+//    child: Container(
+//      height: HaW,
+//      width: HaW,
+//      decoration: BD(color:Colors.green),
+//      alignment: Alignment.center,
+//      child: Text('Green4', style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.normal),),
+//    ),
+//  ),
+//  GestureDetector(
+//    onTap: (){
+//      print('Teal');
+//    },
+//    child: Container(
+//      height: HaW,
+//      width: HaW,
+//      decoration: BD(color:Colors.teal),
+//      alignment: Alignment.center,
+//      child: Text('Teal5', style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.normal),),
+//    ),
+//  ),
+//  GestureDetector(
+//    onTap: (){
+//      print('Blue');
+//    },
+//    child: Container(
+//      height: HaW,
+//      width: HaW,
+//      decoration: BD(color:Colors.blue),
+//      alignment: Alignment.center,
+//      child: Text(
+//        'Blue6',
+//        textAlign: TextAlign.center,
+//        style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.normal),
+//      ),
+//    ),
+//  ),
+//  GestureDetector(
+//    onTap: (){
+//      print('Indigo');
+//    },
+//    child: Container(
+//      height: HaW,
+//      width: HaW,
+//      decoration: BD(color:Colors.indigo),
+//      alignment: Alignment.center,
+//      child: Text(
+//        'Indigo7',
+//        textAlign: TextAlign.center,
+//        style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.normal),
+//      ),
+//    ),
+//  ),
+//  GestureDetector(
+//    onTap: (){
+//      print('Purple');
+//    },
+//    child: Container(
+//      height: HaW,
+//      width: HaW,
+//      decoration: BD(color:Colors.purple),
+//      alignment: Alignment.center,
+//      child: Text(
+//        'Purple8',
+//        textAlign: TextAlign.center,
+//        style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.normal),
+//      ),
+//    ),
+//  ),
+//  GestureDetector(
+//    onTap: (){
+//      print('White');
+//    },
+//    child: Container(
+//      height: HaW,
+//      width: HaW,
+//      decoration: BD(color:Colors.white),
+//      alignment: Alignment.center,
+//      child: Text(
+//        'White9',
+//        textAlign: TextAlign.center,
+//        style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.normal),
+//      ),
+//    ),
+//  ),
+//  GestureDetector(
+//    onTap: (){
+//      print('Black');
+//    },
+//    child: Container(
+//      height: HaW,
+//      width: HaW,
+//      decoration: BD(color:Colors.black),
+//      alignment: Alignment.center,
+//      child: Text(
+//        'Black10',
+//        textAlign: TextAlign.center,
+//        style: TextStyle(fontSize: 24.0,color: Colors.white,fontWeight: FontWeight.normal),
+//      ),
+//    ),
+//  ),
 ];
 
 

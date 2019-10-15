@@ -1,8 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:yet_another_carousel/main.dart';
-import 'friction_simulation.dart';
+
 
 class Carousel extends StatefulWidget {
   Carousel({
@@ -10,16 +9,38 @@ class Carousel extends StatefulWidget {
     this.positionCurve = Curves.linear,
     this.scaleCurve = Curves.linear,
     this.outCurve = Curves.linear,
+    this.backgroundColor = Colors.grey,
     this.fadeOut = false,
     this.scaleOut = false,
+    this.width = double.infinity,
+    this.height = 250.0,
+    this.widgetWidth = 150.0,
+    this.widgetHeight = 150.0,
+    this.widthFactor = 1.0,
+    this.xPosition = 0.0,
+    this.tailPositionX = 0.0,
+    this.tailPositionY = 0.0,
+    this.scrollTo = 0,
   });
 
   List<Widget> children;
   Curve positionCurve;
   Curve scaleCurve;
   Curve outCurve;
+  Color backgroundColor;
+  Size widgetSize;
   bool fadeOut;
   bool scaleOut;
+  double width;
+  double height;
+  double widgetWidth;
+  double widgetHeight;
+  double widthFactor;
+  double xPosition;
+  double tailPositionX;
+  double tailPositionY;
+  int scrollTo;
+
 
   @override
   _CarouselState createState() => _CarouselState();
@@ -30,6 +51,8 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
   GlobalKey _key = GlobalKey();
 
   double _shift = 0.0;
+  int _scrollTo = 0;
+
   double _velocity = 0.0;
   int _dragEndTime = 0;
 
@@ -54,6 +77,7 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
       double r = i/widget.children.length ;
 //      double rawPos = ratio * _sizeWithExtra.width + _shift;
       double ratio = (r + _shift)%1.0;
+      _scrollValue = ratio;
 //      double pos = ratio * _sizeWithExtra.width;
 
       params.add(
@@ -68,28 +92,38 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
 //    print(params);
 //    print('\n');
 
+    _activeWidgetIndex = params[0]['index'];
+
     for (int i = 0; i < params.length;i++)
     {
 //      print(params[i]);
 
-      double lastAnim = widget.outCurve.transform(params[i]["ratio"]) * 25.0;
+
+      double r =  params[i]["ratio"];
+
+      double lastAnim = widget.outCurve.transform(r) * 25.0;
       lastAnim = lastAnim.clamp(0.0, 1.0);
 
-      double pos = widget.positionCurve.transform(params[i]["ratio"]);
-      pos = ((pos * 1.0) - 0.0) - (1-lastAnim);
+      double pos = widget.positionCurve.transform(r);
+      pos = ((pos * widget.widthFactor) - widget.xPosition) - (1-lastAnim);
+      pos += widget.tailPositionX  - ( (1-r) * widget.tailPositionX);
 
-      double scale  = 1 - widget.scaleCurve.transform(params[i]["ratio"]);
-      scale = 1 - params[i]["ratio"];
+      double scale  = 1 - widget.scaleCurve.transform(r);
       scale = widget.scaleOut ? scale * lastAnim : scale;
 
-      double posY = 2.0 - (scale * 2.0);
+      double maxWidth = widget.widgetWidth <= 1.0 ? (_size.width * widget.widgetWidth) : widget.widgetWidth;
+      double maxHeight = widget.widgetHeight <= 1.0 ? (_size.height * widget.widgetHeight) : widget.widgetHeight;
+
+
+      double posY = widget.tailPositionY  - ( (1-r) * widget.tailPositionY);
       double opacity = widget.fadeOut ? lastAnim: 1.0;
+
 
       finalWidgetList.add(
         Align(
           alignment: Alignment(
             pos,
-            0.0
+            posY
           ),
           child: Transform.scale(
             scale: scale,
@@ -98,18 +132,12 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
               child: FittedBox(
                 fit: BoxFit.fitWidth,
                 alignment: Alignment.center,
-                child: widget.children[params[i]["index"]],
-//                Container(
-//                  child: Column(
-//                    children: <Widget>[
-//                      Text(
-//                        '${params[i]["index"]}:::${params[i]["ratio"].toStringAsFixed(2)}',
-//                        textAlign: TextAlign.left,
-//                        style: TextStyle(color: Colors.white),),
-//                      widget.children[params[i]["index"]],
-//                    ],
-//                  ),
-//                ),
+                child: Container(
+                  height: maxHeight,
+                  width: maxWidth,
+                  child: widget.children[params[i]["index"]],
+                ),
+//                child: widget.children[params[i]["index"]],
               ),
             ),
           ),
@@ -118,6 +146,69 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
 
     }
 
+//    finalWidgetList.add(
+//      Align(
+//        alignment: Alignment(
+//          0.0,0.90
+//        ),
+//        child: Container(
+//            height: 10.0,
+//            width: _size.width * 0.80,
+//            decoration: BoxDecoration(
+//              color: Colors.blueGrey[900],
+//              borderRadius: BorderRadius.circular(5.0),
+//              boxShadow: [
+//                new BoxShadow(
+//                  color: Colors.black.withOpacity(0.50),
+//                  offset: new Offset(2.5, 2.5),
+//                  blurRadius: 10.0,
+//                )
+//              ],
+//            ),
+//            child: Stack(
+//              overflow: Overflow.visible,
+//              children: <Widget>[
+//                Align(
+//                  alignment: Alignment
+//                    (
+//                      (_scrollValue * 2.0) - 1.0
+//                      ,0.0
+//                  ),
+//                  child: Container(
+//                    height: 10.0,
+//                    width: 50.0,
+//                    decoration: BoxDecoration(
+//                      color: Colors.green[900],
+//                      borderRadius: BorderRadius.circular(5.0),
+//                      boxShadow: [
+//                        new BoxShadow(
+//                          color: Colors.black.withOpacity(0.50),
+//                          offset: new Offset(2.5, 2.5),
+//                          blurRadius: 10.0,
+//                        )
+//                      ],
+//                    ),
+////                    child:
+//                  ),
+//                ),
+//                Align(
+//                  alignment: Alignment(
+//                      (_scrollValue * 2.0) - 1.0
+//                      ,0
+//                  ),
+//                  child: Text(
+//                    '${(_scrollValue).toStringAsFixed(5)}',
+//                    style: TextStyle(color: Colors.lightGreenAccent,fontSize: 10.0),
+//                    softWrap: true,
+//                  ),
+//                ),
+//              ],
+//            ),
+//          ),
+//      )
+//    );
+
+
     return finalWidgetList;
   }
 
@@ -125,9 +216,7 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
   _getSize(){
     RenderBox RB = _key.currentContext.findRenderObject();
     _size = RB.size;
-
   }
-
 
     @override
   void initState() {
@@ -136,8 +225,6 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
     super.initState();
 
 
-    _shift = (5/-theseIcons.length) + 0.025;
-//    shift = (itemOffset/theseIcons.length) * -2;
     refresh();
 
     _controller = AnimationController(
@@ -145,27 +232,27 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
       vsync: this,
     );
 
+    _controller.addStatusListener((status){
+      print(status);
+      //moves between forwards and back
 
-//    int lastTime = 0;
+      if(status == AnimationStatus.completed)
+      {
+        if (_isAutoScrolling)
+          {
+            _isAutoScrolling = false;
+          }
+      }
+
+    });
 
     _controller.addListener((){
       setState(() {
-
-//        print('last update time == ${DateTime.now().millisecond - lastTime}');
-//        lastTime = DateTime.now().millisecond;
-
         print(_controller.value);
-////        print(Curves.easeIn.transform(1- _controller.value));
 
-//        double d = Curves.decelerate.flipped.transform(1-  _controller.value);
-//        d = pow(d,4);
-//        print(d);
-//        _shift += _velocity * d ;
+        _afterDrag();
 
-          int t = DateTime.now().millisecondsSinceEpoch - _dragEndTime;
-          _shift += _velocity * pow(0.99,t);
-
-
+        _autoScroll();
       });
     });
   }
@@ -174,6 +261,22 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
     refresh();
   }
 
+  _afterDrag(){
+//    print(_controller.value);
+    int t = DateTime.now().millisecondsSinceEpoch - _dragEndTime;
+    _shift += _velocity * pow(0.99,t);
+  }
+
+  bool _isAutoScrolling = false;
+  _autoScroll(){
+//    print('_isAutoScrolling $_isAutoScrolling');
+    if (_isAutoScrolling)
+     {
+       double nShift  = (_scrollTo/-widget.children.length) + 0.04;
+       _shift = _shift + (nShift - _shift) * _controller.value;
+     }
+//    print('_autoScrollTo $_scrollTo');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -181,17 +284,24 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
     refresh();
 //    wList = rebuildWidgetList();
 
+
+    if (widget.scrollTo != _scrollTo  )
+    {
+      _scrollTo = widget.scrollTo;
+      _isAutoScrolling = true;
+
+      _controller.duration = Duration(milliseconds: 1000);
+      _controller.forward(from: 0.0);
+
+    }
+
     return GestureDetector(
       onHorizontalDragUpdate: (value){
         setState(() {
-
-//          _prevDelta = value.primaryDelta/_size.width;
           _shift += value.primaryDelta/_size.width;
-//          _shift = _shift.clamp(-1.0, 1.0);
-//          _shift = _shift.clamp(-1.0, 1.0);
-
-//          print(_shift);
         });
+
+
       },
 //      onTap: (){prevDelta=0.0;},
 //      onHorizontalDragStart: (value){prevDelta=0.0;},
@@ -199,7 +309,7 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
 
         _dragEndTime = DateTime.now().millisecondsSinceEpoch;
         _velocity = value.primaryVelocity/1000;
-        print('_velocity ${_velocity}');
+//        print('_velocity ${_velocity}');
 
         _controller.duration = Duration(milliseconds: (value.primaryVelocity).abs().round());
         _controller.forward(from: 0.0);
@@ -208,18 +318,26 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
       },
       child: Container(
         key: _key,
-        height: 250.0,
-        width: double.infinity,
-        color: Colors.grey[900],
-          child: Stack(
-            overflow: Overflow.clip,
-            alignment: AlignmentDirectional.centerStart,
-            children: refresh(),
-//        children: theseIcons,
-          ),
+        height: widget.height,
+        width: widget.width,
+        color: widget.backgroundColor,
+        child: Stack(
+          overflow: Overflow.clip,
+          alignment: AlignmentDirectional.centerStart,
+          children: refresh(),
+        ),
       ),
     );
   }
 }
 
+double _scrollValue = 0.0;
+double getScrollValue(){
+  return _scrollValue;
+}
+
+int _activeWidgetIndex = 0;
+int getActiveWidgetIndex(){
+  return _activeWidgetIndex;
+}
 
