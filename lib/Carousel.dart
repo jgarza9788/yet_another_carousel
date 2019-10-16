@@ -12,6 +12,7 @@ class Carousel extends StatefulWidget {
     this.backgroundColor = Colors.grey,
     this.fadeOut = false,
     this.scaleOut = false,
+    this.rollToNearest =  true,
     this.width = double.infinity,
     this.height = 250.0,
     this.widgetWidth = 150.0,
@@ -31,6 +32,7 @@ class Carousel extends StatefulWidget {
   Size widgetSize;
   bool fadeOut;
   bool scaleOut;
+  bool rollToNearest;
   double width;
   double height;
   double widgetWidth;
@@ -60,7 +62,8 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
 
   List<Widget> wList = [];
 
-  //todo: create a state machine for state...
+  states state = states.idle;
+
 
   double lastWidgetPosition = 0.0;
   List<Widget> refresh()
@@ -93,8 +96,15 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
     params.sort( (a,b) =>  a["ratio"] < b["ratio"] ? 1:0  );
 //    print(params);
 //    print('\n');
+//    print(params[0]);
 
-    _activeWidgetIndex = params[0]['index'];
+    if (state != states.rollToNearest)
+      {
+        _activeWidgetIndex = params[params.length-1]['index'] ;
+      }
+
+//    print(state);
+//    print(_activeWidgetIndex);
 
     for (int i = 0; i < params.length;i++)
     {
@@ -240,9 +250,19 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
 
       if(status == AnimationStatus.completed)
       {
-        if (_isAutoScrolling)
+        print(state);
+        if (state == states.drag)
           {
-            _isAutoScrolling = false;
+            state = states.dragEnd;
+            _startRollToNearest();
+          }
+        else if (state == states.dragEnd)
+          {
+            _startRollToNearest();
+          }
+        else if (state != states.idle)
+          {
+            state = states.idle;
           }
       }
 
@@ -250,11 +270,26 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
 
     _controller.addListener((){
       setState(() {
-        print(_controller.value);
+//        print(_controller.value);
 
-        _afterDrag();
+        if (state == states.idle)
+          {
+            //do nothing
+          }
+        else if (state == states.dragEnd)
+          {
+            _afterDrag();
+          }
+        else if (state == states.rollToNearest)
+          {
+            _rollToNearest();
+          }
+        else if (state == states.scrollTo)
+          {
+            _autoScroll();
+          }
 
-        _autoScroll();
+
       });
     });
   }
@@ -269,29 +304,44 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
     _shift += _velocity * pow(0.99,t);
   }
 
-  bool _isAutoScrolling = false;
+//  bool _isAutoScrolling = false;
   _autoScroll(){
 //    print('_isAutoScrolling $_isAutoScrolling');
-    if (_isAutoScrolling)
-     {
+//    if (_isAutoScrolling)
+//     {
        double nShift  = (_scrollTo/-widget.children.length) + 0.04;
        _shift = _shift + (nShift - _shift) * _controller.value;
-     }
+//     }
 //    print('_autoScrollTo $_scrollTo');
+  }
+
+  _startRollToNearest(){
+    if (widget.rollToNearest)
+    {
+      state = states.rollToNearest;
+      _controller.duration = Duration(milliseconds: 1000);
+      _controller.forward(from: 0.0);
+    }
+  }
+
+  //todo: fix animation ...during roll to nearest
+  _rollToNearest() {
+
+//    print(_activeWidgetIndex);
+    double nShift  = (_activeWidgetIndex/-widget.children.length) + 0.04;
+    _shift = _shift + (nShift - _shift) * _controller.value;
   }
 
   @override
   Widget build(BuildContext context) {
 
     refresh();
-//    wList = rebuildWidgetList();
-
 
     if (widget.scrollTo != _scrollTo  )
     {
-      _scrollTo = widget.scrollTo;
-      _isAutoScrolling = true;
+      state = states.scrollTo;
 
+      _scrollTo = widget.scrollTo;
       _controller.duration = Duration(milliseconds: 1000);
       _controller.forward(from: 0.0);
 
@@ -299,23 +349,23 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
 
     return GestureDetector(
       onHorizontalDragUpdate: (value){
+
+        state = states.drag;
+
         setState(() {
           _shift += value.primaryDelta/_size.width;
         });
 
-
       },
-//      onTap: (){prevDelta=0.0;},
-//      onHorizontalDragStart: (value){prevDelta=0.0;},
-      onHorizontalDragEnd: (value){
+      onHorizontalDragEnd: (value) {
+
+        state = states.dragEnd;
 
         _dragEndTime = DateTime.now().millisecondsSinceEpoch;
         _velocity = value.primaryVelocity/1000;
-//        print('_velocity ${_velocity}');
 
         _controller.duration = Duration(milliseconds: (value.primaryVelocity).abs().round());
         _controller.forward(from: 0.0);
-
 
       },
       child: Container(
@@ -343,3 +393,10 @@ int getActiveWidgetIndex(){
   return _activeWidgetIndex;
 }
 
+enum states{
+  idle,
+  drag,
+  dragEnd,
+  scrollTo,
+  rollToNearest,
+}
