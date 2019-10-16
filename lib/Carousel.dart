@@ -60,6 +60,8 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
 
   List<Widget> wList = [];
 
+  //todo: create a state machine for state...
+
   double lastWidgetPosition = 0.0;
   List<Widget> refresh()
   {
