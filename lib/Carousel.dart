@@ -336,9 +336,8 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
     {
       state = states.rollToNearest;
 
-//      print(DateTime.now().millisecondsSinceEpoch);
+      pprint = true;
 
-//      print(_shift);
       _shift = (((_shift + 1.0) % 2.0) -1.0);
       print('_shift $_shift');
 
@@ -348,29 +347,32 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
     }
   }
 
+  bool pprint = false;
+
   //todo: fix animation ...during roll to nearest
   _rollToNearest() {
 
 //    print(_activeWidgetIndex);
 
     double nShift  = (_activeWidgetIndex/-widget.children.length) + 0.04;
-//    print('_shift $_shift');
-//    print('nShift $nShift');
-////    print('shift difference ${nShift - _shift}');
-////
-//    double dShift = nShift-_shift;
-////
-//    if (dShift.abs() > 1.0)
+
+//    if (pprint)
 //      {
-//        dShift = _shift-nShift;
+//        print('_shift $_shift');
+//        print('nShift $nShift');
+//        print('shift difference ${nShift - _shift}');
+//        print('lastDragDirection $lastDragDirection');
+//        pprint = false;
 //      }
-////
-//    print('dShift $dShift');
+//
+////    nShift *= lastDragDirection;
+//    double dShift = (nShift- _shift);
 
-//    _shift = _shift + dShift * _controller.value;
-    _shift = _shift + (nShift-_shift) * _controller.value;
-
+    _shift = _shift + (nShift-_shift) * _controller.value ;
+//    _shift = _shift + dShift * _controller.value ;
   }
+
+//  double lastDragDirection = 0.0;
 
   @override
   Widget build(BuildContext context) {
@@ -395,6 +397,8 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
         setState(() {
           _shift += value.primaryDelta/_size.width;
         });
+
+//        lastDragDirection = value.primaryDelta.sign;
 
       },
       onHorizontalDragEnd: (value) {
