@@ -101,6 +101,14 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
     if (state != states.rollToNearest)
       {
         _activeWidgetIndex = params[params.length-1]['index'] ;
+
+//        print(params[params.length-1]);
+//        print(params[params.length-2]);
+//
+//        if (params[params.length-1]['ratio'] > 0.009)
+//          {
+//            _activeWidgetIndex = params[params.length-2]['index'] ;
+//          }
       }
 
 //    print(state);
@@ -269,6 +277,7 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
     });
 
     _controller.addListener((){
+      print(state);
       setState(() {
 //        print(_controller.value);
 
@@ -301,7 +310,14 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
   _afterDrag(){
 //    print(_controller.value);
     int t = DateTime.now().millisecondsSinceEpoch - _dragEndTime;
-    _shift += _velocity * pow(0.99,t);
+    double addVel = _velocity * pow(0.99,t);
+    _shift += addVel;
+
+    print(addVel);
+    if (addVel.abs() < 0.00001)
+      {
+        _startRollToNearest();
+      }
   }
 
 //  bool _isAutoScrolling = false;
@@ -319,6 +335,14 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
     if (widget.rollToNearest)
     {
       state = states.rollToNearest;
+
+//      print(DateTime.now().millisecondsSinceEpoch);
+
+//      print(_shift);
+      _shift = (((_shift + 1.0) % 2.0) -1.0);
+      print('_shift $_shift');
+
+      _controller.stop(canceled: true);
       _controller.duration = Duration(milliseconds: 1000);
       _controller.forward(from: 0.0);
     }
@@ -328,8 +352,24 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
   _rollToNearest() {
 
 //    print(_activeWidgetIndex);
+
     double nShift  = (_activeWidgetIndex/-widget.children.length) + 0.04;
-    _shift = _shift + (nShift - _shift) * _controller.value;
+//    print('_shift $_shift');
+//    print('nShift $nShift');
+////    print('shift difference ${nShift - _shift}');
+////
+//    double dShift = nShift-_shift;
+////
+//    if (dShift.abs() > 1.0)
+//      {
+//        dShift = _shift-nShift;
+//      }
+////
+//    print('dShift $dShift');
+
+//    _shift = _shift + dShift * _controller.value;
+    _shift = _shift + (nShift-_shift) * _controller.value;
+
   }
 
   @override
@@ -358,6 +398,8 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
 
       },
       onHorizontalDragEnd: (value) {
+
+//        print(DateTime.now().millisecondsSinceEpoch);
 
         state = states.dragEnd;
 
