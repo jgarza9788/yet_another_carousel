@@ -5,12 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d96d2c06-e643-416c-8d51-0853df4847a6" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/.gradle/4.10.2/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/android/.gradle/4.10.2/fileHashes/fileHashes.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/.gradle/4.10.2/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/android/.gradle/4.10.2/fileHashes/fileHashes.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/.gradle/4.10.2/taskHistory/taskHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/android/.gradle/4.10.2/taskHistory/taskHistory.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/.gradle/4.10.2/taskHistory/taskHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/android/.gradle/4.10.2/taskHistory/taskHistory.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/android/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/Carousel.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Carousel.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/main.dart" afterDir="false" />
     </list>
@@ -30,23 +24,35 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="Nexus6" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/main.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="235">
-              <caret line="106" column="34" selection-start-line="106" selection-start-column="34" selection-end-line="106" selection-end-column="34" />
+            <state relative-caret-position="220">
+              <caret line="146" column="61" lean-forward="true" selection-start-line="146" selection-start-column="61" selection-end-line="146" selection-end-column="61" />
               <folding>
                 <element signature="e#1#40#0" expanded="true" />
+                <element signature="e#902#1204#0" />
+                <element signature="e#1257#4014#0" />
+                <element signature="e#4358#4786#0" />
+                <element signature="e#4816#5244#0" />
+                <element signature="e#5404#5686#0" />
+                <element signature="e#5705#5994#0" />
+                <element signature="e#6013#6302#0" />
+                <element signature="e#6321#6622#0" />
+                <element signature="e#6641#6927#0" />
+                <element signature="e#6946#7229#0" />
+                <element signature="e#7248#7592#0" />
+                <element signature="e#7611#7961#0" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/Carousel.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="56">
-              <caret line="346" selection-start-line="346" selection-end-line="346" />
+            <state relative-caret-position="223">
+              <caret line="23" column="48" selection-start-line="23" selection-start-column="48" selection-end-line="23" selection-end-column="48" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
               </folding>
@@ -82,14 +88,14 @@
       <list>
         <option value="$PROJECT_DIR$/lib/swipe_button.dart" />
         <option value="$PROJECT_DIR$/lib/friction_simulation.dart" />
-        <option value="$PROJECT_DIR$/lib/main.dart" />
         <option value="$PROJECT_DIR$/lib/Carousel.dart" />
+        <option value="$PROJECT_DIR$/lib/main.dart" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
     <option name="x" value="-14" />
-    <option name="width" value="2370" />
+    <option name="width" value="2788" />
     <option name="height" value="2102" />
   </component>
   <component name="ProjectView">
@@ -160,10 +166,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="0" width="1354" height="1201" extended-state="0" />
+    <frame x="-8" y="0" width="1593" height="1201" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.06619938" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.0558109" />
       <window_info id="Captures" order="1" side_tool="true" />
       <window_info id="Structure" order="2" side_tool="true" />
       <window_info id="Image Layers" order="3" />
@@ -186,8 +192,8 @@
       <window_info anchor="right" id="Device File Explorer" order="0" side_tool="true" />
       <window_info anchor="right" id="Capture Analysis" order="1" />
       <window_info anchor="right" id="Theme Preview" order="2" />
-      <window_info anchor="right" id="Flutter Inspector" order="3" weight="0.19414575" />
-      <window_info anchor="right" id="Flutter Outline" order="4" weight="0.32950708" />
+      <window_info anchor="right" id="Flutter Inspector" order="3" visible="true" weight="0.16349311" />
+      <window_info anchor="right" id="Flutter Outline" order="4" weight="0.32943925" />
       <window_info anchor="right" id="Palette&#9;" order="5" />
     </layout>
   </component>
@@ -215,22 +221,34 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/friction_simulation.dart" />
     <entry file="file://$PROJECT_DIR$/lib/swipe_button.dart" />
-    <entry file="file://$PROJECT_DIR$/lib/main.dart">
+    <entry file="file://$PROJECT_DIR$/lib/Carousel.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="235">
-          <caret line="106" column="34" selection-start-line="106" selection-start-column="34" selection-end-line="106" selection-end-column="34" />
+        <state relative-caret-position="223">
+          <caret line="23" column="48" selection-start-line="23" selection-start-column="48" selection-end-line="23" selection-end-column="48" />
           <folding>
-            <element signature="e#1#40#0" expanded="true" />
+            <element signature="e#0#19#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/Carousel.dart">
+    <entry file="file://$PROJECT_DIR$/lib/main.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="56">
-          <caret line="346" selection-start-line="346" selection-end-line="346" />
+        <state relative-caret-position="220">
+          <caret line="146" column="61" lean-forward="true" selection-start-line="146" selection-start-column="61" selection-end-line="146" selection-end-column="61" />
           <folding>
-            <element signature="e#0#19#0" expanded="true" />
+            <element signature="e#1#40#0" expanded="true" />
+            <element signature="e#902#1204#0" />
+            <element signature="e#1257#4014#0" />
+            <element signature="e#4358#4786#0" />
+            <element signature="e#4816#5244#0" />
+            <element signature="e#5404#5686#0" />
+            <element signature="e#5705#5994#0" />
+            <element signature="e#6013#6302#0" />
+            <element signature="e#6321#6622#0" />
+            <element signature="e#6641#6927#0" />
+            <element signature="e#6946#7229#0" />
+            <element signature="e#7248#7592#0" />
+            <element signature="e#7611#7961#0" />
           </folding>
         </state>
       </provider>

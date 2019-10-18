@@ -19,8 +19,9 @@ class Carousel extends StatefulWidget {
     this.widgetHeight = 150.0,
     this.widthFactor = 1.0,
     this.xPosition = 0.0,
-    this.tailPositionX = 0.0,
-    this.tailPositionY = 0.0,
+//    this.tailPositionX = 0.0,
+//    this.tailPositionY = 0.0,
+    this.endOfLineOffset = const Offset(0.0, 0.0),
     this.scrollTo = 0,
   });
 
@@ -39,8 +40,9 @@ class Carousel extends StatefulWidget {
   double widgetHeight;
   double widthFactor;
   double xPosition;
-  double tailPositionX;
-  double tailPositionY;
+//  double tailPositionX;
+//  double tailPositionY;
+  Offset endOfLineOffset;
   int scrollTo;
 
 
@@ -121,22 +123,25 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
 
       double r =  params[i]["ratio"];
 
-      double lastAnim = widget.outCurve.transform(r) * 25.0;
-      lastAnim = lastAnim.clamp(0.0, 1.0);
+      double rightEnd = widget.outCurve.transform(r) * 25.0;
+      rightEnd = rightEnd.clamp(0.0, 1.0);
+
+      double leftEnd = (widget.outCurve.transform(r) * 25.0) - 24.0;
+      leftEnd = leftEnd.clamp(0.0, 1.0);
 
       double pos = widget.positionCurve.transform(r);
-      pos = ((pos * widget.widthFactor) - widget.xPosition) - (1-lastAnim);
-      pos += widget.tailPositionX  - ( (1-r) * widget.tailPositionX);
+      pos = ((pos * widget.widthFactor) - widget.xPosition) - (1-rightEnd);
+      pos += widget.endOfLineOffset.dx  - ( (1-r) * widget.endOfLineOffset.dx);
 
       double scale  = 1 - widget.scaleCurve.transform(r);
-      scale = widget.scaleOut ? scale * lastAnim : scale;
+      scale = widget.scaleOut ? scale * rightEnd : scale;
 
       double maxWidth = widget.widgetWidth <= 1.0 ? (_size.width * widget.widgetWidth) : widget.widgetWidth;
       double maxHeight = widget.widgetHeight <= 1.0 ? (_size.height * widget.widgetHeight) : widget.widgetHeight;
 
 
-      double posY = widget.tailPositionY  - ( (1-r) * widget.tailPositionY);
-      double opacity = widget.fadeOut ? lastAnim: 1.0;
+      double posY = widget.endOfLineOffset.dy  - ( (1-r) * widget.endOfLineOffset.dy);
+      double opacity = widget.fadeOut ? rightEnd: 1.0;
 
 
       finalWidgetList.add(
@@ -349,8 +354,6 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
   }
 
 
-  //todo: fix animation ...during roll to nearest
-
   _rollToNearest() {
 
     double nShift  = (_activeWidgetIndex/-widget.children.length) + 0.04;
@@ -362,11 +365,11 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
     }
 
 //    _shift = _shift + (nShift-_shift) *  _controller.value  ;
-    _shift = _shift + dShift *  _controller.value  ;
+    double t = Curves.easeInOut.transform(_controller.value);
+    _shift = _shift + dShift *  t  ;
 
   }
 
-//  double lastDragDirection = 0.0;
 
   @override
   Widget build(BuildContext context) {
@@ -392,12 +395,8 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
           _shift += value.primaryDelta/_size.width;
         });
 
-//        lastDragDirection = value.primaryDelta.sign;
-
       },
       onHorizontalDragEnd: (value) {
-
-//        print(DateTime.now().millisecondsSinceEpoch);
 
         state = states.dragEnd;
 
