@@ -58,6 +58,16 @@ class _MyAppState extends State<MyApp> {
                 endOfLineOffset: Offset(0.5,0.0),
                 scrollTo: wIndex,
               ),
+              Divider(height: 2.5,),
+              Carousel(
+                children: EmojiList2,
+                backgroundColor: Colors.grey[850],
+                positionCurve: Curves.easeOut,
+                scaleCurve: Curves.easeOut,
+                fadeOut: true,
+                endOfLineOffset: Offset(1.25,1.5),
+                scrollTo: wIndex,
+              ),
               /*
               Carousel(
                 children: theseIcons,
@@ -142,7 +152,7 @@ class _MyAppState extends State<MyApp> {
         ),
         bottomNavigationBar: Container(
           height: 50.0,
-          color: Colors.blueGrey,
+          color: Colors.blueGrey[900],
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
 //            crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -159,7 +169,7 @@ class _MyAppState extends State<MyApp> {
                     print(wIndex);
                   },
                 ),
-                Text('$wIndex'),
+                Text('$wIndex',style: TextStyle(color: Colors.white),),
                 RaisedButton(
                   color: Colors.blue,
                   child: Text('>>',style: TextStyle(fontSize: 24,color: Colors.white),),
@@ -196,6 +206,17 @@ List<Widget> EmojiList = [
   Text('😘',textAlign: TextAlign.center,style: TextStyle(fontSize: 125.0,backgroundColor: Colors.transparent,color: Colors.grey[900]),),
   Text('😢',textAlign: TextAlign.center,style: TextStyle(fontSize: 125.0,backgroundColor: Colors.transparent,color: Colors.grey[900]),),
   Text('🤯',textAlign: TextAlign.center,style: TextStyle(fontSize: 125.0,backgroundColor: Colors.transparent,color: Colors.grey[900]),),
+];
+
+List<Widget> EmojiList2 = [
+  Text('🦄',textAlign: TextAlign.center,style: TextStyle(fontSize: 125.0,backgroundColor: Colors.transparent,color: Colors.grey[900]),),
+  Text('🌠',textAlign: TextAlign.center,style: TextStyle(fontSize: 125.0,backgroundColor: Colors.transparent,color: Colors.grey[900]),),
+  Text('🎠',textAlign: TextAlign.center,style: TextStyle(fontSize: 125.0,backgroundColor: Colors.transparent,color: Colors.grey[900]),),
+  Text('🎆',textAlign: TextAlign.center,style: TextStyle(fontSize: 125.0,backgroundColor: Colors.transparent,color: Colors.grey[900]),),
+  Text('💖',textAlign: TextAlign.center,style: TextStyle(fontSize: 125.0,backgroundColor: Colors.transparent,color: Colors.grey[900]),),
+  Text('🐱‍',textAlign: TextAlign.center,style: TextStyle(fontSize: 125.0,backgroundColor: Colors.transparent,color: Colors.grey[900]),),
+  Text('🐉',textAlign: TextAlign.center,style: TextStyle(fontSize: 125.0,backgroundColor: Colors.transparent,color: Colors.grey[900]),),
+  Text('😈',textAlign: TextAlign.center,style: TextStyle(fontSize: 125.0,backgroundColor: Colors.transparent,color: Colors.grey[900]),),
 ];
 
 List<Widget> theseIcons = [
