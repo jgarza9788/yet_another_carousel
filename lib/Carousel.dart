@@ -336,40 +336,34 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
     {
       state = states.rollToNearest;
 
-      pprint = true;
-
       _shift = (((_shift + 1.0) % 2.0) -1.0);
-      print('_shift $_shift');
+//      _shift = 5.0;
+//      _shift = _shift % 1.0;
+//      print('_shift $_shift');
 
       _controller.stop(canceled: true);
       _controller.duration = Duration(milliseconds: 1000);
       _controller.forward(from: 0.0);
+
     }
   }
 
-  bool pprint = false;
 
   //todo: fix animation ...during roll to nearest
+
   _rollToNearest() {
 
-//    print(_activeWidgetIndex);
-
     double nShift  = (_activeWidgetIndex/-widget.children.length) + 0.04;
+    double dShift = (nShift-_shift);
 
-//    if (pprint)
-//      {
-//        print('_shift $_shift');
-//        print('nShift $nShift');
-//        print('shift difference ${nShift - _shift}');
-//        print('lastDragDirection $lastDragDirection');
-//        pprint = false;
-//      }
-//
-////    nShift *= lastDragDirection;
-//    double dShift = (nShift- _shift);
+    if (dShift.abs() > 0.95)
+    {
+      dShift += dShift.sign * -1.0;
+    }
 
-    _shift = _shift + (nShift-_shift) * _controller.value ;
-//    _shift = _shift + dShift * _controller.value ;
+//    _shift = _shift + (nShift-_shift) *  _controller.value  ;
+    _shift = _shift + dShift *  _controller.value  ;
+
   }
 
 //  double lastDragDirection = 0.0;
