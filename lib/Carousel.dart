@@ -19,9 +19,8 @@ class Carousel extends StatefulWidget {
     this.widgetHeight = 150.0,
     this.widthFactor = 1.0,
     this.xPosition = 0.0,
-//    this.tailPositionX = 0.0,
-//    this.tailPositionY = 0.0,
-    this.endOfLineOffset = const Offset(0.0, 0.0),
+    this.tailOfLineOffset = const Offset(0.0, 0.0),
+    this.headOfLineOffset = const Offset(-1.0, -1.0),
     this.scrollTo = 0,
   });
 
@@ -40,9 +39,8 @@ class Carousel extends StatefulWidget {
   double widgetHeight;
   double widthFactor;
   double xPosition;
-//  double tailPositionX;
-//  double tailPositionY;
-  Offset endOfLineOffset;
+  Offset tailOfLineOffset;
+  Offset headOfLineOffset;
   int scrollTo;
 
 
@@ -126,21 +124,25 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
       double rightEnd = widget.outCurve.transform(r) * 25.0;
       rightEnd = rightEnd.clamp(0.0, 1.0);
 
-      double leftEnd = (widget.outCurve.transform(r) * 25.0) - 24.0;
+      double leftEnd = 1.0 - (widget.outCurve.transform(r) * 25);
       leftEnd = leftEnd.clamp(0.0, 1.0);
 
-      double pos = widget.positionCurve.transform(r);
-      pos = ((pos * widget.widthFactor) - widget.xPosition) - (1-rightEnd);
-      pos += widget.endOfLineOffset.dx  - ( (1-r) * widget.endOfLineOffset.dx);
+//      print(leftEnd);
 
+      double pos = widget.positionCurve.transform(r);
+      pos = ((pos * widget.widthFactor) - widget.xPosition) - (1-rightEnd) ;
+      pos += widget.tailOfLineOffset.dx  - ( (1-r) * widget.tailOfLineOffset.dx);
+
+      pos += ( (widget.headOfLineOffset.dx + 1.0) * leftEnd);
       double scale  = 1 - widget.scaleCurve.transform(r);
-      scale = widget.scaleOut ? scale * rightEnd : scale;
+      scale = widget.scaleOut ? scale * (leftEnd + 1.0) : scale;
 
       double maxWidth = widget.widgetWidth <= 1.0 ? (_size.width * widget.widgetWidth) : widget.widgetWidth;
       double maxHeight = widget.widgetHeight <= 1.0 ? (_size.height * widget.widgetHeight) : widget.widgetHeight;
 
 
-      double posY = widget.endOfLineOffset.dy  - ( (1-r) * widget.endOfLineOffset.dy);
+      double posY = widget.tailOfLineOffset.dy  - ( (1-r) * widget.tailOfLineOffset.dy);
+      posY += ( (widget.headOfLineOffset.dy + 1.0) * (leftEnd + 1.0));
       double opacity = widget.fadeOut ? rightEnd: 1.0;
 
 
