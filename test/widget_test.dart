@@ -41,115 +41,38 @@ class _MyAppState extends State<MyApp> {
             children: <Widget>[
               Carousel(
                 children: theseIcons,
-                backgroundColor: Colors.grey[850],
                 positionCurve: Curves.easeOut,
                 scaleCurve: Curves.easeOut,
                 fadeOut: true,
                 scaleOut: true,
                 widthFactor: 2.0,
-//                tailOfLineOffset: Offset(3.0,0.0),
-//                headOfLineOffset: Offset(-3.0,-1.0),
                 scrollTo: wIndex,
               ),
               Divider(height: 2.5,),
-//              Carousel(
-//                children: EmojiList,
-//                backgroundColor: Colors.grey[850],
-//                positionCurve: Curves.easeOutExpo,
-//                scaleCurve: Curves.bounceOut,
-//                fadeOut: true,
-////                tailOfLineOffset: Offset(0.5,0.0),
-//                scrollTo: wIndex,
-//              ),
-//              Divider(height: 2.5,),
-//              Carousel(
-//                children: EmojiList2,
-//                backgroundColor: Colors.grey[850],
-//                positionCurve: Curves.easeOut,
-//                scaleCurve: Curves.easeOut,
-//                fadeOut: true,
-//                endOfLineOffset: Offset(1.25,1.5),
-//                scrollTo: wIndex,
-//              ),
-              /*
               Carousel(
                 children: theseIcons,
-                backgroundColor: Colors.grey[850],
-                positionCurve: Curves.easeIn,
-                scaleCurve: Curves.easeIn,
-                scaleOut: true,
-              ),
-              Divider(height: 2.5,),
-              Carousel(
-                children: theseIcons,
-                backgroundColor: Colors.grey[850],
                 positionCurve: Curves.easeOut,
                 scaleCurve: Curves.easeOut,
                 fadeOut: true,
-                widthFactor: 2.0,
+                widthFactor: 7.5,
+                widgetWidth: 0.8,
+                widgetHeight: 0.7,
+                xPosition: 0.5,
+                tailOfLineOffset: Offset(0.0,2.5),
+                scrollTo: wIndex,
               ),
               Divider(height: 2.5,),
               Carousel(
-                children: theseIcons,
-                backgroundColor: Colors.grey[850],
-                positionCurve: Curves.easeIn,
-                scaleCurve: Curves.easeIn,
+                children: EmojiList,
+                positionCurve: Curves.easeOutExpo,
+                scaleCurve: Curves.bounceOut,
                 fadeOut: true,
-                widthFactor: 2.0,
-                widgetHeight: 100,
-                widgetWidth: 100,
+                scaleOut: true,
+                widthFactor: 1.5,
+                scrollTo: wIndex,
               ),
               Divider(height: 2.5,),
-              Carousel(
-                children: theseIcons,
-                backgroundColor: Colors.grey[850],
-                positionCurve: Curves.easeIn,
-                scaleCurve: Curves.easeIn,
-                fadeOut: true,
-                widthFactor: 2.0,
-              ),
-              Divider(height: 2.5,),
-              Carousel(
-                children: theseIcons,
-                backgroundColor: Colors.grey[850],
-                positionCurve: Curves.easeOut,
-                scaleCurve: Curves.easeIn,
-                tailPositionY: -1.50,
-                tailPositionX: 0.5,
-                fadeOut: true,
-                widgetWidth: 150,
-                widgetHeight: 100,
-              ),
-              Divider(height: 2.5,),
-              Carousel(
-                children: theseIcons,
-                backgroundColor: Colors.grey[850],
-                positionCurve: Curves.easeOut,
-                scaleCurve: Curves.easeIn,
-                tailPositionY: 2.0,
-                tailPositionX: 2.0,
-                xPosition: 0.25,
-                fadeOut: true,
-                widthFactor: 1.0,
-                widgetWidth: 0.7,
-                widgetHeight: 0.6,
-              ),
-              Divider(height: 2.5,),
-              Carousel(
-                children: theseIcons,
-                height: 50.0,
-                backgroundColor: Colors.grey[850],
-                positionCurve: Curves.easeOut,
-                scaleCurve: Curves.easeIn,
-                tailPositionY: 0.0,
-                tailPositionX: 1.0,
-                widthFactor: 2.0,
-                xPosition: 1.0,
-                fadeOut: true,
-                widgetWidth: 0.5,
-                widgetHeight: 0.75,
-              ),
-              */
+
             ],
           ),
         ),
@@ -158,7 +81,6 @@ class _MyAppState extends State<MyApp> {
           color: Colors.blueGrey[900],
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               RaisedButton(
                 color: Colors.blue,
@@ -172,7 +94,7 @@ class _MyAppState extends State<MyApp> {
                   print(wIndex);
                 },
               ),
-              Text('$wIndex',style: TextStyle(color: Colors.white),),
+              Text('$wIndex',style: TextStyle(color: Colors.white,fontSize: 24),),
               RaisedButton(
                 color: Colors.blue,
                 child: Text('>>',style: TextStyle(fontSize: 24,color: Colors.white),),
@@ -188,7 +110,6 @@ class _MyAppState extends State<MyApp> {
             ],
           ),
         ),
-
       ),
     );
   }
@@ -211,16 +132,6 @@ List<Widget> EmojiList = [
   Text('🤯',textAlign: TextAlign.center,style: TextStyle(fontSize: 125.0,backgroundColor: Colors.transparent,color: Colors.grey[900]),),
 ];
 
-List<Widget> EmojiList2 = [
-  Text('🦄',textAlign: TextAlign.center,style: TextStyle(fontSize: 125.0,backgroundColor: Colors.transparent,color: Colors.grey[900]),),
-  Text('🌠',textAlign: TextAlign.center,style: TextStyle(fontSize: 125.0,backgroundColor: Colors.transparent,color: Colors.grey[900]),),
-  Text('🎠',textAlign: TextAlign.center,style: TextStyle(fontSize: 125.0,backgroundColor: Colors.transparent,color: Colors.grey[900]),),
-  Text('🎆',textAlign: TextAlign.center,style: TextStyle(fontSize: 125.0,backgroundColor: Colors.transparent,color: Colors.grey[900]),),
-  Text('💖',textAlign: TextAlign.center,style: TextStyle(fontSize: 125.0,backgroundColor: Colors.transparent,color: Colors.grey[900]),),
-  Text('🐱‍',textAlign: TextAlign.center,style: TextStyle(fontSize: 125.0,backgroundColor: Colors.transparent,color: Colors.grey[900]),),
-  Text('🐉',textAlign: TextAlign.center,style: TextStyle(fontSize: 125.0,backgroundColor: Colors.transparent,color: Colors.grey[900]),),
-  Text('😈',textAlign: TextAlign.center,style: TextStyle(fontSize: 125.0,backgroundColor: Colors.transparent,color: Colors.grey[900]),),
-];
 
 List<Widget> theseIcons = [
   GestureDetector(

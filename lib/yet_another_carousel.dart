@@ -9,7 +9,7 @@ class Carousel extends StatefulWidget {
     this.positionCurve = Curves.linear,
     this.scaleCurve = Curves.linear,
     this.outCurve = Curves.linear,
-    this.backgroundColor = Colors.grey,
+    this.backgroundColor = Colors.transparent,
     this.fadeOut = false,
     this.scaleOut = false,
     this.rollToNearest =  true,
@@ -24,23 +24,55 @@ class Carousel extends StatefulWidget {
     this.scrollTo = 0,
   });
 
+  //this is the list of widgets that will be rendered
   List<Widget> children;
+
+  //this is the curve that will be used for positioning
   Curve positionCurve;
+
+  //this is the curve that will be used for scaling the widgets
   Curve scaleCurve;
+
+  //this is the curve that will be used while transitioning out of screen (left side)
   Curve outCurve;
+
+  //this is the color of the background
   Color backgroundColor;
-  Size widgetSize;
+
+  //if the widgets will fade out
   bool fadeOut;
+
+  //if the widgets will scale out
   bool scaleOut;
+
+  //if the carousel will roll to the nearest widget after drag
   bool rollToNearest;
+
+  //the width of the carousel
   double width;
+
+  //the height of the carousel
   double height;
+
+  //the width of the widgets (anything under 1 will be treated as a ratio)
   double widgetWidth;
+
+  //the height of the widgets (anything under 1 will be treated as a ratio)
   double widgetHeight;
+
+  //this will scale the widget horizontally
   double widthFactor;
+
+  //this can shift the widget on the x axis
   double xPosition;
+
+  //this is the offset of the carousel on the right hand side
   Offset tailOfLineOffset;
+
+  //this is the offset of the carousel on the left hand side
   Offset headOfLineOffset;
+
+  //the widget will scroll to this index after change.
   int scrollTo;
 
 
@@ -303,7 +335,6 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
       dShift += dShift.sign * -1.0;
     }
 
-//    _shift = _shift + (nShift-_shift) *  _controller.value  ;
     double t = Curves.easeInOut.transform(_controller.value);
     _shift = _shift + dShift *  t  ;
 
