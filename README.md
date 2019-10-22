@@ -3,6 +3,12 @@
 ![gif](misc/20191020204855.gif)
 
 
+## donate
+
+[Buy me a ☕](paypal.me/JGarza9788/3.50)
+
+
+
 ## Parameter
 ```dart
   //this is the list of widgets that will be rendered
