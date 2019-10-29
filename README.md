@@ -5,7 +5,7 @@
 
 ## donate
 
-[Buy me a ☕](paypal.me/JGarza9788/3.50)
+[Buy me a ☕](https://www.paypal.com/paypalme2/JGarza9788/3.50)
 
 
 

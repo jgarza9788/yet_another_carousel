@@ -1,8 +1,8 @@
 name: yet_another_carousel
-description: YAC
+description: Renders a List<Widget> horizontally…similar to the amazon fire tables. Please see readme file for more info.
 author: Justin Garza <JGarza9788@gmail.com>
 homepage: https://github.com/jgarza9788/yet_another_carousel/
-version: 0.1.0
+version: 0.1.2
 
 
 environment:

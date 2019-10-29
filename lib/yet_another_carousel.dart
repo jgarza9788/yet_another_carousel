@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-
 class Carousel extends StatefulWidget {
   Carousel({
     @required this.children,
@@ -12,7 +11,7 @@ class Carousel extends StatefulWidget {
     this.backgroundColor = Colors.transparent,
     this.fadeOut = false,
     this.scaleOut = false,
-    this.rollToNearest =  true,
+    this.rollToNearest = true,
     this.width = double.infinity,
     this.height = 250.0,
     this.widgetWidth = 150.0,
@@ -25,63 +24,62 @@ class Carousel extends StatefulWidget {
   });
 
   //this is the list of widgets that will be rendered
-  List<Widget> children;
+  final List<Widget> children;
 
   //this is the curve that will be used for positioning
-  Curve positionCurve;
+  final Curve positionCurve;
 
   //this is the curve that will be used for scaling the widgets
-  Curve scaleCurve;
+  final Curve scaleCurve;
 
   //this is the curve that will be used while transitioning out of screen (left side)
-  Curve outCurve;
+  final Curve outCurve;
 
   //this is the color of the background
-  Color backgroundColor;
+  final Color backgroundColor;
 
   //if the widgets will fade out
-  bool fadeOut;
+  final bool fadeOut;
 
   //if the widgets will scale out
-  bool scaleOut;
+  final bool scaleOut;
 
   //if the carousel will roll to the nearest widget after drag
-  bool rollToNearest;
+  final bool rollToNearest;
 
   //the width of the carousel
-  double width;
+  final double width;
 
   //the height of the carousel
-  double height;
+  final double height;
 
   //the width of the widgets (anything under 1 will be treated as a ratio)
-  double widgetWidth;
+  final double widgetWidth;
 
   //the height of the widgets (anything under 1 will be treated as a ratio)
-  double widgetHeight;
+  final double widgetHeight;
 
   //this will scale the widget horizontally
-  double widthFactor;
+  final double widthFactor;
 
   //this can shift the widget on the x axis
-  double xPosition;
+  final double xPosition;
 
   //this is the offset of the carousel on the right hand side
-  Offset tailOfLineOffset;
+  final Offset tailOfLineOffset;
 
   //this is the offset of the carousel on the left hand side
-  Offset headOfLineOffset;
+  final Offset headOfLineOffset;
 
   //the widget will scroll to this index after change.
-  int scrollTo;
-
+  final int scrollTo;
 
   @override
   _CarouselState createState() => _CarouselState();
 }
 
-class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin{
-
+class _CarouselState extends State<Carousel>
+    with SingleTickerProviderStateMixin {
   GlobalKey _key = GlobalKey();
 
   double _shift = 0.0;
@@ -96,43 +94,36 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
 
   states state = states.idle;
 
-
   double lastWidgetPosition = 0.0;
-  List<Widget> refresh()
-  {
+  List<Widget> refresh() {
     List<Widget> finalWidgetList = [];
 
-    if (_size == Size.zero)
-    {
+    if (_size == Size.zero) {
       return finalWidgetList;
     }
 
     var params = [];
 
-    for(int i = 0; i < widget.children.length;i++)
-    {
-      double r = i/widget.children.length ;
+    for (int i = 0; i < widget.children.length; i++) {
+      double r = i / widget.children.length;
 //      double rawPos = ratio * _sizeWithExtra.width + _shift;
-      double ratio = (r + _shift)%1.0;
+      double ratio = (r + _shift) % 1.0;
       _scrollValue = ratio;
 //      double pos = ratio * _sizeWithExtra.width;
 
-      params.add(
-          {
-            "index":i,
-            "ratio":ratio,
-          }
-      );
+      params.add({
+        "index": i,
+        "ratio": ratio,
+      });
     }
 
-    params.sort( (a,b) =>  a["ratio"] < b["ratio"] ? 1:0  );
+    params.sort((a, b) => a["ratio"] < b["ratio"] ? 1 : 0);
 //    print(params);
 //    print('\n');
 //    print(params[0]);
 
-    if (state != states.rollToNearest)
-    {
-      _activeWidgetIndex = params[params.length-1]['index'] ;
+    if (state != states.rollToNearest) {
+      _activeWidgetIndex = params[params.length - 1]['index'];
 
 //        print(params[params.length-1]);
 //        print(params[params.length-2]);
@@ -146,12 +137,10 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
 //    print(state);
 //    print(_activeWidgetIndex);
 
-    for (int i = 0; i < params.length;i++)
-    {
+    for (int i = 0; i < params.length; i++) {
 //      print(params[i]);
 
-
-      double r =  params[i]["ratio"];
+      double r = params[i]["ratio"];
 
       double rightEnd = widget.outCurve.transform(r) * 25.0;
       rightEnd = rightEnd.clamp(0.0, 1.0);
@@ -162,28 +151,29 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
 //      print(leftEnd);
 
       double pos = widget.positionCurve.transform(r);
-      pos = ((pos * widget.widthFactor) - widget.xPosition) - (1-rightEnd) ;
-      pos += widget.tailOfLineOffset.dx  - ( (1-r) * widget.tailOfLineOffset.dx);
+      pos = ((pos * widget.widthFactor) - widget.xPosition) - (1 - rightEnd);
+      pos +=
+          widget.tailOfLineOffset.dx - ((1 - r) * widget.tailOfLineOffset.dx);
 
-      pos += ( (widget.headOfLineOffset.dx + 1.0) * leftEnd);
-      double scale  = 1 - widget.scaleCurve.transform(r);
+      pos += ((widget.headOfLineOffset.dx + 1.0) * leftEnd);
+      double scale = 1 - widget.scaleCurve.transform(r);
       scale = widget.scaleOut ? scale * (leftEnd + 1.0) : scale;
 
-      double maxWidth = widget.widgetWidth <= 1.0 ? (_size.width * widget.widgetWidth) : widget.widgetWidth;
-      double maxHeight = widget.widgetHeight <= 1.0 ? (_size.height * widget.widgetHeight) : widget.widgetHeight;
+      double maxWidth = widget.widgetWidth <= 1.0
+          ? (_size.width * widget.widgetWidth)
+          : widget.widgetWidth;
+      double maxHeight = widget.widgetHeight <= 1.0
+          ? (_size.height * widget.widgetHeight)
+          : widget.widgetHeight;
 
-
-      double posY = widget.tailOfLineOffset.dy  - ( (1-r) * widget.tailOfLineOffset.dy);
-      posY += ( (widget.headOfLineOffset.dy + 1.0) * (leftEnd + 1.0));
-      double opacity = widget.fadeOut ? rightEnd: 1.0;
-
+      double posY =
+          widget.tailOfLineOffset.dy - ((1 - r) * widget.tailOfLineOffset.dy);
+      posY += ((widget.headOfLineOffset.dy + 1.0) * (leftEnd + 1.0));
+      double opacity = widget.fadeOut ? rightEnd : 1.0;
 
       finalWidgetList.add(
         Align(
-          alignment: Alignment(
-              pos,
-              posY
-          ),
+          alignment: Alignment(pos, posY),
           child: Transform.scale(
             scale: scale,
             child: Opacity(
@@ -202,24 +192,21 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
           ),
         ),
       );
-
     }
 
     return finalWidgetList;
   }
 
   Size _size = Size.zero;
-  _getSize(){
-    RenderBox RB = _key.currentContext.findRenderObject();
-    _size = RB.size;
+  _getSize() {
+    RenderBox rb = _key.currentContext.findRenderObject();
+    _size = rb.size;
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     WidgetsBinding.instance.addPostFrameCallback(_afterLayout);
     super.initState();
-
 
     refresh();
 
@@ -228,91 +215,74 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
       vsync: this,
     );
 
-    _controller.addStatusListener((status){
+    _controller.addStatusListener((status) {
       print(status);
       //moves between forwards and back
 
-      if(status == AnimationStatus.completed)
-      {
+      if (status == AnimationStatus.completed) {
         print(state);
-        if (state == states.drag)
-        {
+        if (state == states.drag) {
           state = states.dragEnd;
           _startRollToNearest();
-        }
-        else if (state == states.dragEnd)
-        {
+        } else if (state == states.dragEnd) {
           _startRollToNearest();
-        }
-        else if (state != states.idle)
-        {
+        } else if (state != states.idle) {
           state = states.idle;
         }
       }
-
     });
 
-    _controller.addListener((){
+    _controller.addListener(() {
       print(state);
       setState(() {
 //        print(_controller.value);
 
-        if (state == states.idle)
-        {
+        if (state == states.idle) {
           //do nothing
-        }
-        else if (state == states.dragEnd)
-        {
+        } else if (state == states.dragEnd) {
           _afterDrag();
-        }
-        else if (state == states.rollToNearest)
-        {
+        } else if (state == states.rollToNearest) {
           _rollToNearest();
-        }
-        else if (state == states.scrollTo)
-        {
+        } else if (state == states.scrollTo) {
           _autoScroll();
         }
-
-
       });
     });
   }
+
   _afterLayout(_) {
     _getSize();
     refresh();
   }
 
-  _afterDrag(){
+  _afterDrag() {
 //    print(_controller.value);
     int t = DateTime.now().millisecondsSinceEpoch - _dragEndTime;
-    double addVel = _velocity * pow(0.99,t);
+    double addVel = _velocity * pow(0.99, t);
     _shift += addVel;
 
     print(addVel);
-    if (addVel.abs() < 0.00001)
-    {
+    if (addVel.abs() < 0.00001) {
       _startRollToNearest();
     }
   }
 
 //  bool _isAutoScrolling = false;
-  _autoScroll(){
+  _autoScroll() {
 //    print('_isAutoScrolling $_isAutoScrolling');
 //    if (_isAutoScrolling)
 //     {
-    double nShift  = (_scrollTo/-widget.children.length) + 0.04;
+    double nShift = (_scrollTo / -widget.children.length) + 0.04;
     _shift = _shift + (nShift - _shift) * _controller.value;
 //     }
 //    print('_autoScrollTo $_scrollTo');
   }
 
-  _startRollToNearest(){
-    if (widget.rollToNearest)
-    {
+  _startRollToNearest() {
+    if (widget.rollToNearest) {
       state = states.rollToNearest;
 
-      _shift = (((_shift + 1.0) % 2.0) -1.0);
+      _shift = (((_shift + 1.0) % 2.0) - 1.0);
 //      _shift = 5.0;
 //      _shift = _shift % 1.0;
 //      print('_shift $_shift');
@@ -320,62 +290,50 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
       _controller.stop(canceled: true);
       _controller.duration = Duration(milliseconds: 1000);
       _controller.forward(from: 0.0);
-
     }
   }
 
-
   _rollToNearest() {
+    double nShift = (_activeWidgetIndex / -widget.children.length) + 0.04;
+    double dShift = (nShift - _shift);
 
-    double nShift  = (_activeWidgetIndex/-widget.children.length) + 0.04;
-    double dShift = (nShift-_shift);
-
-    if (dShift.abs() > 0.95)
-    {
+    if (dShift.abs() > 0.95) {
       dShift += dShift.sign * -1.0;
     }
 
     double t = Curves.easeInOut.transform(_controller.value);
-    _shift = _shift + dShift *  t  ;
-
+    _shift = _shift + dShift * t;
   }
-
 
   @override
   Widget build(BuildContext context) {
-
     refresh();
 
-    if (widget.scrollTo != _scrollTo  )
-    {
+    if (widget.scrollTo != _scrollTo) {
       state = states.scrollTo;
 
       _scrollTo = widget.scrollTo;
       _controller.duration = Duration(milliseconds: 1000);
       _controller.forward(from: 0.0);
-
     }
 
     return GestureDetector(
-      onHorizontalDragUpdate: (value){
-
+      onHorizontalDragUpdate: (value) {
         state = states.drag;
 
         setState(() {
-          _shift += value.primaryDelta/_size.width;
+          _shift += value.primaryDelta / _size.width;
         });
-
       },
       onHorizontalDragEnd: (value) {
-
         state = states.dragEnd;
 
         _dragEndTime = DateTime.now().millisecondsSinceEpoch;
-        _velocity = value.primaryVelocity/1000;
+        _velocity = value.primaryVelocity / 1000;
 
-        _controller.duration = Duration(milliseconds: (value.primaryVelocity).abs().round());
+        _controller.duration =
+            Duration(milliseconds: (value.primaryVelocity).abs().round());
         _controller.forward(from: 0.0);
-
       },
       child: Container(
         key: _key,
@@ -393,16 +351,16 @@ class _CarouselState extends State<Carousel> with SingleTickerProviderStateMixin
 }
 
 double _scrollValue = 0.0;
-double getScrollValue(){
+double getScrollValue() {
   return _scrollValue;
 }
 
 int _activeWidgetIndex = 0;
-int getActiveWidgetIndex(){
+int getActiveWidgetIndex() {
   return _activeWidgetIndex;
 }
 
-enum states{
+enum states {
   idle,
   drag,
   dragEnd,
